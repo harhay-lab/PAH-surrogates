@@ -3,11 +3,15 @@ rm(list = ls())
 library(survival)
 library(boot)
 
+# Set seed
 set.seed(10122)
 
 # Load data
 dat <- read.csv("/Volumes/Kawut_CCDIPH/Surrogate/surrogate.csv",
                 header = TRUE)
+
+############################################################################
+# Data Cleaning
 
 # Interpolate 12 and 24 week data to get missing 16 week data for surrogates
 # Not done for COMPERA 2 or FPHR (non-inv) because Trial 1010 has no data
@@ -42,12 +46,7 @@ dat$cw_bin[dat$cw == "CLINICAL WORSENING #1"] <- 1
 dat$death_bin <- 0
 dat$death_bin[dat$death == "DEATH"] <- 1
 
-# Make control variables new types
-dat$studyid_f <- as.factor(dat$studyid)
-dat$eti_code_f <- as.factor(dat$eti_code)
-dat$sysbp <- as.numeric(dat$sysbp)
-
-# Make scores new types
+# Make ordinal scores into factor variables
 dat$compera_cat0 <- factor(round(dat$compera_full_wk0))
 levels(dat$compera_cat0) <- c("Low", "Intermediate", "High")
 dat$compera_cat16 <- factor(round(dat$compera_full_wk16))
@@ -70,206 +69,196 @@ dat$fphr_cat16[dat$fphr_cat16 == 0] <- 1
 dat$fphr_cat16 <- factor(dat$fphr_cat16)
 levels(dat$fphr_cat16) <- c("Low", "Intermediate", "High")
 
-
-
-######################################################
-# Functions
-#####################################################
-
-# point estimates
-mediate_surv = function(model.mar,model.con,treat,data) {
-  m.mar=coxph(model.mar,data=data)
-  m.con=coxph(model.con,data=data)
-  a=m.mar$coefficients[treat]
-  b=m.con$coefficients[treat]
-  NIE = a - b
-  NDE = b
-  TE  = a
-  MP  = NIE/TE
-  c(NIE=NIE,NDE=NDE,TE=TE,MP=MP)
-}
-
-# bootstrap confidence interval
-# Input: same to mediate_surv. Here R is the number of bootstrap replicates (
-#        which I suggest >=500, ideally 1000 or more).
-mediate_surv_ci = function(model.mar,model.con,treat,data,R=1000) {
-  ConstructBootFun = function(d,i) {
-    mediate_surv(model.mar=model.mar,model.con=model.con,treat=treat,data=d[i,])
-  }
-  boot_res=suppressWarnings(boot(data, ConstructBootFun, R = R, stype = "i"))
-  out <- as.data.frame(matrix(NA,ncol=3,nrow=4))
-  out[,1]=boot_res$t0
-  rownames(out)=names(boot_res$t0)
-  for (j in (1:4)) {
-    out[j,2]  = sd(boot_res$t[,j])
-    out[j,3:4]=boot.ci(boot_res,type="perc",index=j)$percent[4:5]
-  }
-  colnames(out) <- c("Estimate","S.E","CI.lower","CI.upper")
-  out
-}
-
-###########################################################################
-# REVEAL 2.0 Mediation analyses
+# Make low-risk indicators
 dat$reveal2_low <- 1*(round(dat$reveal2_wk16) <= 6)
-
-# primary outcome
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + reveal2_wk0 + factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + reveal2_low + reveal2_wk0 + factor(studyid_f)
-treat = "trt"
-
-mediate_surv(model.mar,model.con,treat,dat)
-mediate_surv_ci(model.mar,model.con,treat,dat,R=1000) # ideally R=1000
-
-# secondary outcome
-model.mar = Surv(death_day_full, death_bin) ~ trt + reveal2_wk0+factor(studyid_f)
-model.con = Surv(death_day_full, death_bin) ~ trt + reveal2_low +reveal2_wk0 + factor(studyid_f)
-
-#model.mar = Surv(death_day_full, death_bin) ~ trt + reveal2_wk0
-#model.con = Surv(death_day_full, death_bin) ~ trt + reveal2_wk16+reveal2_wk0
-
-treat = "trt"
-
-mediate_surv(model.mar,model.con,treat,dat)
-mediate_surv_ci(model.mar,model.con,treat,dat,R=100) # ideally R=1000
-
-
-
-###########################################################################
-# REVEAL Lite Mediation analyses
 dat$reveal_lite_low <- 1*(round(dat$reveal_lite_wk16) <= 5)
-
-# primary outcome
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk0+factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_low +reveal_lite_wk0 + factor(studyid_f)
-
-mediate_surv(model.mar,model.con,treat,dat)
-mediate_surv_ci(model.mar,model.con,treat,dat,R=1000)
-
-
-
-###########################################################################
-# COMPERA Mediation analyses
 dat$compera_full_low <- 1*(dat$compera_cat16 == "Low")
-
-# primary outcome
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + compera_full_wk0+factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + compera_full_low +compera_full_wk0 + factor(studyid_f)
-
-mediate_surv(model.mar,model.con,treat,dat)
-mediate_surv_ci(model.mar,model.con,treat,dat,R=1000)
-
-
-###########################################################################
-# COMPERA 2 Mediation analyses
 dat$compera_2_low <- 1*(dat$compera2_cat16 == "Low")
-
-# primary outcome
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk0+factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + compera_2_low +compera_2_wk0 + factor(studyid_f)
-
-mediate_surv(model.mar,model.con,treat,dat)
-mediate_surv_ci(model.mar,model.con,treat,dat,R=1000)
-
-
-
-###########################################################################
-# FPHR Mediation analyses
 dat$fphr_noninv_low <- 1*(dat$fphr_cat16 == "Low")
 
-# primary outcome
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk0+factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_low +fphr_noninv_wk0 + factor(studyid_f)
 
-mediate_surv(model.mar,model.con,treat,dat)
-mediate_surv_ci(model.mar,model.con,treat,dat,R=1000)
+##########################################################################
+# Helper functions
+
+# Get point estimates
+mediate_surv <- function(model.mar, model.con, treat, data) {
+  m.mar <- coxph(model.mar, data = data)
+  m.con <- coxph(model.con, data = data)
+  a <- m.mar$coefficients[treat]
+  b <- m.con$coefficients[treat]
+  NIE <- a - b
+  NDE <- b
+  TE <- a
+  MP <- NIE / TE
+  c(NIE = NIE, NDE = NDE, TE = TE, MP = MP)
+}
+
+# Get bootstrap confidence interval
+mediate_surv_ci <- function(model.mar, model.con, treat, data, R = 1000) {
+  ConstructBootFun <- function(d, i) {
+    mediate_surv(model.mar = model.mar, model.con = model.con,
+                 treat = treat, data = d[i, ])
+  }
+  boot_res <- suppressWarnings(boot(data, ConstructBootFun,
+                                    R = R, stype = "i"))
+  out <- as.data.frame(matrix(NA, ncol = 3, nrow = 4))
+  out[, 1] <- boot_res$t0
+  rownames(out) <- names(boot_res$t0)
+  for (j in (1:4)) {
+    out[j,2] <- sd(boot_res$t[, j])
+    out[j, 3:4] <- boot.ci(boot_res, type = "perc", index = j)$percent[4:5]
+  }
+  colnames(out) <- c("Estimate", "S.E", "CI.lower", "CI.upper")
+  return(out)
+}
 
 
-######
-# Treatment on survival alone
-mod <- coxph(Surv(death_day_full, death_bin) ~ trt, data = dat)
-exp(confint(mod))
+###########################################################################
+# Mediation analyses
+
+# REVEAL 2.0, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + reveal2_wk0 + factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal2_low + reveal2_wk0 +
+                                         factor(studyid_f)
+treat <- "trt"
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+# REVEAL 2.0 example for survival
+#model.mar <- Surv(death_day_full, death_bin) ~ trt + reveal2_wk0 +
+                                               #factor(studyid_f)
+#model.con <- Surv(death_day_full, death_bin) ~ trt + reveal2_low + 
+                              #reveal2_wk0 + factor(studyid_f)
+
+#mediate_surv(model.mar, model.con, treat, dat)
+#mediate_surv_ci(model.mar, model.con, treat, dat, R=1000)
 
 
+# REVEAL Lite, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk0 +
+                                         factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_low +
+                                         reveal_lite_wk0 + factor(studyid_f)
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+
+# COMPERA, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_wk0 +
+                                         factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_low +
+                                         compera_full_wk0 + factor(studyid_f)
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R=1000)
+
+
+# COMPERA 2, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk0 +
+                                         factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_low +
+                                         compera_2_wk0 + factor(studyid_f)
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+
+# FPHR, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk0 +
+                                         factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_low +
+                                         fphr_noninv_wk0 + factor(studyid_f)
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
 
 
 
 ############################################################################
 # Sensitivity analysis: Use AFT models
 
-# Functions
-# point estimates
-mediate_aft = function(model.mar,model.con,treat,data) {
-  m.mar=survreg(model.mar,data=data,dist="weibull")
-  m.con=survreg(model.con,data=data,dist="weibull")
-  a=m.mar$coefficients[treat]
-  b=m.con$coefficients[treat]
-  NIE = a - b
-  NDE = b
-  TE  = a
-  MP  = NIE/TE
-  c(NIE=NIE,NDE=NDE,TE=TE,MP=MP)
+# Helper functions
+# Get point estimates
+mediate_aft <- function(model.mar, model.con, treat, data) {
+  m.mar <- survreg(model.mar, data = data, dist = "weibull")
+  m.con <- survreg(model.con, data = data, dist = "weibull")
+  a <- m.mar$coefficients[treat]
+  b <- m.con$coefficients[treat]
+  NIE <- a - b
+  NDE <- b
+  TE <- a
+  MP <- NIE/TE
+  c(NIE = NIE, NDE = NDE, TE = TE, MP = MP)
 }
 
-# bootstrap confidence interval
-# Input: same to mediate_aft. Here R is the number of bootstrap replicates (
-#        which I suggest >=500, ideally 1000 or more).
-mediate_aft_ci = function(model.mar,model.con,treat,data,R=1000) {
-  ConstructBootFun = function(d,i) {
-    mediate_aft(model.mar=model.mar,model.con=model.con,treat=treat,data=d[i,])
+# Get bootstrap confidence interval
+mediate_aft_ci <- function(model.mar, model.con, treat, data, R = 1000) {
+  ConstructBootFun <- function(d, i) {
+    mediate_aft(model.mar = model.mar, model.con = model.con,
+                treat = treat, data = d[i, ])
   }
-  boot_res=suppressWarnings(boot(data, ConstructBootFun, R = R, stype = "i"))
-  out <- as.data.frame(matrix(NA,ncol=3,nrow=4))
-  out[,1]=boot_res$t0
-  rownames(out)=names(boot_res$t0)
+  boot_res <- suppressWarnings(boot(data, ConstructBootFun,
+                                    R = R, stype = "i"))
+  out <- as.data.frame(matrix(NA, ncol = 3, nrow = 4))
+  out[,1] <- boot_res$t0
+  rownames(out) <- names(boot_res$t0)
   for (j in (1:4)) {
-    out[j,2]  = sd(boot_res$t[,j])
-    out[j,3:4]=boot.ci(boot_res,type="perc",index=j)$percent[4:5]
+    out[j, 2] <- sd(boot_res$t[, j])
+    out[j, 3:4] <- boot.ci(boot_res, type = "perc", index = j)$percent[4:5]
   }
-  colnames(out) <- c("Estimate","S.E","CI.lower","CI.upper")
-  out
+  colnames(out) <- c("Estimate", "S.E", "CI.lower", "CI.upper")
+  return(out)
 }
 
 ###########################################################################
-# REVEAL 2.0 Mediation analyses
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + reveal2_wk0 + factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + reveal2_low + reveal2_wk0 + factor(studyid_f)
+# Mediation analyses
 
-mediate_aft(model.mar,model.con,treat,dat)
-mediate_aft_ci(model.mar,model.con,treat,dat,R=1000)
+# REVEAL 2.0, clinical worsening, AFT
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + reveal2_wk0 + factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal2_low + reveal2_wk0 +
+                                         factor(studyid_f)
 
-
-###########################################################################
-# REVEAL Lite Mediation analyses
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk0+factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_low +reveal_lite_wk0 + factor(studyid_f)
-
-mediate_aft(model.mar,model.con,treat,dat)
-mediate_aft_ci(model.mar,model.con,treat,dat,R=1000)
+mediate_aft(model.mar, model.con, treat, dat)
+mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
 
 
+# REVEAL Lite, clinical worsening, AFT
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk0 +
+                                         factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_low +
+                                         reveal_lite_wk0 + factor(studyid_f)
 
-###########################################################################
-# COMPERA Mediation analyses
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + compera_full_wk0+factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + compera_full_low +compera_full_wk0 + factor(studyid_f)
-
-mediate_aft(model.mar,model.con,treat,dat)
-mediate_aft_ci(model.mar,model.con,treat,dat,R=1000)
-
-
-###########################################################################
-# COMPERA 2 Mediation analyses
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk0+factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + compera_2_low +compera_2_wk0 + factor(studyid_f)
-
-mediate_aft(model.mar,model.con,treat,dat)
-mediate_aft_ci(model.mar,model.con,treat,dat,R=1000)
+mediate_aft(model.mar, model.con, treat, dat)
+mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
 
 
-###########################################################################
-# FPHR Mediation analyses
-model.mar = Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk0+factor(studyid_f)
-model.con = Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_low +fphr_noninv_wk0 + factor(studyid_f)
+# COMPERA, clinical worsening, AFT
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_wk0 +
+                                         factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_low +
+                                         compera_full_wk0 + factor(studyid_f)
 
-mediate_aft(model.mar,model.con,treat,dat)
-mediate_aft_ci(model.mar,model.con,treat,dat,R=1000)
+mediate_aft(model.mar, model.con, treat, dat)
+mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
+
+
+# COMPERA 2, clinical worsening, AFT
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk0 +
+                                         factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_low + compera_2_wk0 +
+                                         factor(studyid_f)
+
+mediate_aft(model.mar, model.con, treat, dat)
+mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
+
+
+# FPHR, clinical worsening, AFT
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk0 +
+                                         factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_low +
+                                         fphr_noninv_wk0 + factor(studyid_f)
+
+mediate_aft(model.mar, model.con, treat, dat)
+mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
