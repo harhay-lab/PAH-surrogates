@@ -71,7 +71,7 @@ dat$cw_day_full2 <- dat$cw_day_full - 16*7
 dat$death_day_full2 <- dat$death_day_full - 16*7
 
 # Make figure panels
-# Treatment panel
+# Treatment panels
 p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
                data = dat) %>% 
   ggsurvfit(linetype_aes = TRUE) +
@@ -104,58 +104,8 @@ p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
         axis.title.y = element_text(hjust = 0.5, size = 11),
         legend.position = "bottom")
 
-# REVEAL 2.0 panel
-p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
-               data = dat[dat$cw_day_full > 16*7 &
-                            !is.na(dat$reveal_cat16), ]) %>% 
-  ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "REVEAL 2.0", x = "Years",
-       y = "Prop. survived w/o CW") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
-
-p4 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
-               data = dat[dat$death_day_full > 16*7 &
-                            !is.na(dat$reveal_cat16), ]) %>% 
-  ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "REVEAL 2.0", x = "Years",
-       y = "Prop. survived") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
-
-# REVEAL Lite panels
-p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
-               data = dat[dat$cw_day_full > 16*7 &
-                            !is.na(dat$reveal_lite_cat16), ]) %>% 
-  ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "REVEAL Lite", x = "Years",
-       y = "Prop. survived w/o CW") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
-
-p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
-               data = dat[dat$death_day_full > 16*7 &
-                            !is.na(dat$reveal_lite_cat16), ]) %>% 
-  ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "REVEAL Lite", x = "Years",
-       y = "Prop. survived") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
-
 # COMPERA panels
-p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
+p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$compera_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
@@ -175,7 +125,7 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 11),
         legend.position = "bottom")
 
-p8 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
+p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$compera_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
@@ -194,6 +144,69 @@ p8 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
         legend.position = "bottom")
+
+# Make figure for paper
+pdf("Output/kaplan-meier-figure.pdf", height = 7.5, width = 6)
+grid.arrange(p1, p2, p3, p4, nrow = 2)
+dev.off()
+
+
+
+
+
+
+###########################################################################
+# Figure for supplement (time to CW/survival after other risk scores)
+
+# REVEAL 2.0 panels
+p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
+               data = dat[dat$cw_day_full > 16*7 &
+                            !is.na(dat$reveal_cat16), ]) %>% 
+  ggsurvfit(linetype_aes = TRUE) +
+  labs(title = "REVEAL 2.0", x = "Years",
+       y = "Prop. survived w/o CW") + 
+  add_confidence_interval() +
+  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
+                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  theme(plot.title = element_text(hjust = 0.5, size = 11),
+        legend.position = "none")
+
+p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
+               data = dat[dat$death_day_full > 16*7 &
+                            !is.na(dat$reveal_cat16), ]) %>% 
+  ggsurvfit(linetype_aes = TRUE) +
+  labs(title = "REVEAL 2.0", x = "Years",
+       y = "Prop. survived") + 
+  add_confidence_interval() +
+  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
+                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  theme(plot.title = element_text(hjust = 0.5, size = 11),
+        legend.position = "none")
+
+# REVEAL Lite panels
+p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
+               data = dat[dat$cw_day_full > 16*7 &
+                            !is.na(dat$reveal_lite_cat16), ]) %>% 
+  ggsurvfit(linetype_aes = TRUE) +
+  labs(title = "REVEAL Lite", x = "Years",
+       y = "Prop. survived w/o CW") + 
+  add_confidence_interval() +
+  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
+                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  theme(plot.title = element_text(hjust = 0.5, size = 11),
+        legend.position = "none")
+
+p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
+               data = dat[dat$death_day_full > 16*7 &
+                            !is.na(dat$reveal_lite_cat16), ]) %>% 
+  ggsurvfit(linetype_aes = TRUE) +
+  labs(title = "REVEAL Lite", x = "Years",
+       y = "Prop. survived") + 
+  add_confidence_interval() +
+  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
+                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  theme(plot.title = element_text(hjust = 0.5, size = 11),
+        legend.position = "none")
 
 # COMPERA 2.0 Panels
 p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
@@ -259,73 +272,7 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
         legend.position = "bottom")
 
 
-# Make full figure
-#pdf("kaplan-meier-figure2.pdf", height = 8.5, width = 6)
-#grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, nrow = 6)
-#dev.off()
-
-pdf("kaplan-meier-figure2.pdf", height = 7.5, width = 6)
-grid.arrange(p1, p2, p7, p8, nrow = 2)
+# Make supplement figure
+pdf("kaplan-meier-figure2.pdf", height = 8.5, width = 6)
+grid.arrange(p5, p6, p7, p8, p9, p10, p11, p12, nrow = 4)
 dev.off()
-
-
-
-
-
-
-# Alternative plots
-p13 <- survfit2(Surv(cw_day_full, cw_bin) ~ reveal_cat16 + trt,
-               data = dat[!is.na(dat$reveal_cat16), ]) %>% 
-  ggsurvfit() +
-  labs(title = "REVEAL 2.0", x = "Years",
-       y = "Prop. with no CW") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
-  geom_vline(xintercept = 16*7, lty = 2) + 
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
-
-
-p14 <- survfit2(Surv(cw_day_full, cw_bin) ~ reveal_lite_cat16 + trt,
-               data = dat[!is.na(dat$reveal_lite_cat16), ]) %>% 
-  ggsurvfit() +
-  labs(title = "REVEAL Lite", x = "Years",
-       y = "Prop. with no CW") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
-  geom_vline(xintercept = 16*7, lty = 2) + 
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
-
-p15 <- survfit2(Surv(cw_day_full, cw_bin) ~ compera_cat16 + trt,
-               data = dat[!is.na(dat$compera_cat16), ]) %>% 
-  ggsurvfit() +
-  labs(title = "COMPERA", x = "Years",
-       y = "Prop. with no CW") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
-  geom_vline(xintercept = 16*7, lty = 2) + 
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
-
-p16 <- survfit2(Surv(cw_day_full, cw_bin) ~ compera2_cat16 + trt,
-               data = dat[!is.na(dat$compera2_cat16), ]) %>% 
-  ggsurvfit() +
-  labs(title = "COMPERA 2.0", x = "Years",
-       y = "Prop. with no CW") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
-  geom_vline(xintercept = 16*7, lty = 2) + 
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
-
-p17 <- survfit2(Surv(cw_day_full, cw_bin) ~ fphr_cat16 + trt,
-               data = dat[!is.na(dat$fphr_cat16), ]) %>% 
-  ggsurvfit() +
-  labs(title = "FPHR", x = "Years",
-       y = "Prop. with no CW") + 
-  add_confidence_interval() +
-  scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
-  geom_vline(xintercept = 16*7, lty = 2) + 
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
