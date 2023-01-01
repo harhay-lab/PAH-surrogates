@@ -1,6 +1,7 @@
 # Clear data and load libraries
 rm(list = ls())
 library(ggsurvfit)
+library(glue)
 library(gridExtra)
 
 # Load data
@@ -75,46 +76,62 @@ dat$death_day_full2 <- dat$death_day_full - 16*7
 p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
                data = dat) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "Stratified by treatment", x = "Years",
-       y = "Proportion survived without CW") +
+  labs(title = "A", x = "Years",
+       y = "Cumulative survival free from clinical worsening") +
+  ylim(c(0.25, 1)) +
+  annotate("text", x = 1250, y = 0.67,
+    label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full,
+                       cw_bin) ~ trt, data = dat))}")) +
   add_confidence_interval() +
   scale_colour_manual(breaks = c("Active", "Control"),
-                      values = c("purple", "orange")) +
+                      values = c("grey", "black")) +
   scale_fill_manual(breaks = c("Active", "Control"),
-                      values = c("purple", "orange")) +
+                      values = c("grey", "black")) +
   scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
-        legend.position = "bottom")
+        legend.position = c(0.15, 0.15),
+        legend.background = element_rect(fill = "white", color = "black"))
 
 p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
                data = dat) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "Stratified by treatment", x = "Years",
-       y = "Proportion survived") + 
+  labs(title = "B", x = "Years",
+       y = "Cumulative survival") + 
+  ylim(c(0.25, 1)) +
+  annotate("text", x = 1250, y = 0.75,
+           label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full,
+                              death_bin) ~ trt, data = dat))}")) +
   add_confidence_interval() +
   scale_colour_manual(breaks = c("Active", "Control"),
-                      values = c("purple", "orange")) +
+                      values = c("grey", "black")) +
   scale_fill_manual(breaks = c("Active", "Control"),
-                    values = c("purple", "orange")) +
+                    values = c("grey", "black")) +
   scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
-        legend.position = "bottom")
+        legend.position = c(0.15, 0.15),
+        legend.background = element_rect(fill = "white", color = "black"))
 
 # COMPERA panels
 p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$compera_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "Stratified by COMPERA at 16 weeks", x = "Years",
-       y = "Proportion survived without CW") + 
+  labs(title = "C", x = "Years",
+       y = "Cumulative survival free from clinical worsening") + 
+  ylim(c(0.25, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.85,
+           label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
+                              cw_bin) ~ compera_cat16,
+                              data = dat[dat$cw_day_full > 16*7 &
+                                         !is.na(dat$compera_cat16), ]))}")) +
   add_confidence_interval() +
-  scale_colour_manual(values = c("red", "blue"),
+  scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk")) +
-  scale_fill_manual(values = c("red", "blue"),
+  scale_fill_manual(values = c("grey", "black"),
                     labels = c("Not low risk", "Low risk")) +
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk")) +
@@ -123,18 +140,25 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
-        legend.position = "bottom")
+        legend.position = c(0.15, 0.15),
+        legend.background = element_rect(fill = "white", color = "black"))
 
 p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$compera_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "Stratified by COMPERA at 16 weeks", x = "Years",
-       y = "Proportion survived") + 
+  labs(title = "D", x = "Years",
+       y = "Cumulative survival") + 
+  ylim(c(0.25, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.7,
+           label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
+                              death_bin) ~ compera_cat16,
+                              data = dat[dat$death_day_full > 16*7 &
+                                         !is.na(dat$compera_cat16), ]))}")) +
   add_confidence_interval() +
-  scale_colour_manual(values = c("red", "blue"),
+  scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk")) +
-  scale_fill_manual(values = c("red", "blue"),
+  scale_fill_manual(values = c("grey", "black"),
                     labels = c("Not low risk", "Low risk")) +
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk")) +
@@ -143,7 +167,8 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
-        legend.position = "bottom")
+        legend.position = c(0.15, 0.15),
+        legend.background = element_rect(fill = "white", color = "black"))
 
 # Make figure for paper
 pdf("Output/kaplan-meier-figure.pdf", height = 7.5, width = 6)
