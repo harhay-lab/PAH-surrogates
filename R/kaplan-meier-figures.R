@@ -188,113 +188,228 @@ p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$reveal_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "REVEAL 2.0", x = "Years",
-       y = "Prop. survived w/o CW") + 
+  labs(title = "A", x = "Years",
+       y = "Cumulative survival free from CW") + 
+  ylim(c(0.2, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.85, size = 9/.pt,
+           label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
+                              cw_bin) ~ reveal_cat16,
+                              data = dat[dat$cw_day_full > 16*7 &
+                                         !is.na(dat$reveal_cat16), ]))}")) +
   add_confidence_interval() +
+  scale_colour_manual(values = c("grey", "black"),
+                      labels = c("Not low risk", "Low risk")) +
+  scale_fill_manual(values = c("grey", "black"),
+                    labels = c("Not low risk", "Low risk")) +
+  scale_linetype_manual(values = 2:1,
+                        labels = c("Not low risk", "Low risk")) +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
+  theme(plot.title = element_text(hjust = 0.5, size = 9),
+        axis.title.x = element_text(hjust = 0.5, size = 9),
+        axis.title.y = element_text(hjust = 0.5, size = 9),
+        legend.position = c(0.15, 0.27),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$reveal_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "REVEAL 2.0", x = "Years",
-       y = "Prop. survived") + 
+  labs(title = "B", x = "Years",
+       y = "Cumulative survival") + 
+  ylim(c(0.2, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.7, size = 9/.pt,
+           label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
+                              death_bin) ~ reveal_cat16,
+                              data = dat[dat$death_day_full > 16*7 &
+                                         !is.na(dat$reveal_cat16), ]))}")) +
   add_confidence_interval() +
+  scale_colour_manual(values = c("grey", "black"),
+                      labels = c("Not low risk", "Low risk")) +
+  scale_fill_manual(values = c("grey", "black"),
+                    labels = c("Not low risk", "Low risk")) +
+  scale_linetype_manual(values = 2:1,
+                        labels = c("Not low risk", "Low risk")) +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
+  theme(plot.title = element_text(hjust = 0.5, size = 9),
+        axis.title.x = element_text(hjust = 0.5, size = 9),
+        axis.title.y = element_text(hjust = 0.5, size = 9),
+        legend.position = c(0.15, 0.27),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 # REVEAL Lite panels
 p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$reveal_lite_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "REVEAL Lite", x = "Years",
-       y = "Prop. survived w/o CW") + 
+  labs(title = "C", x = "Years",
+       y = "Cumulative survival free from CW") + 
+  ylim(c(0.2, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.85, size = 9/.pt,
+           label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
+                              cw_bin) ~ reveal_lite_cat16,
+                              data = dat[dat$cw_day_full > 16*7 &
+                                    !is.na(dat$reveal_lite_cat16), ]))}")) +
   add_confidence_interval() +
+  scale_colour_manual(values = c("grey", "black"),
+                      labels = c("Not low risk", "Low risk")) +
+  scale_fill_manual(values = c("grey", "black"),
+                    labels = c("Not low risk", "Low risk")) +
+  scale_linetype_manual(values = 2:1,
+                        labels = c("Not low risk", "Low risk")) +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
+  theme(plot.title = element_text(hjust = 0.5, size = 9),
+        axis.title.x = element_text(hjust = 0.5, size = 9),
+        axis.title.y = element_text(hjust = 0.5, size = 9),
+        legend.position = c(0.15, 0.27),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$reveal_lite_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "REVEAL Lite", x = "Years",
-       y = "Prop. survived") + 
+  labs(title = "D", x = "Years",
+       y = "Cumulative survival") + 
+  ylim(c(0.2, 1)) +
   add_confidence_interval() +
+  annotate("text", x = 1250-16*7, y = 0.67, size = 9/.pt,
+           label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
+                              death_bin) ~ reveal_lite_cat16,
+                              data = dat[dat$death_day_full > 16*7 &
+                                    !is.na(dat$reveal_lite_cat16), ]))}")) +
+  scale_colour_manual(values = c("grey", "black"),
+                      labels = c("Not low risk", "Low risk")) +
+  scale_fill_manual(values = c("grey", "black"),
+                    labels = c("Not low risk", "Low risk")) +
+  scale_linetype_manual(values = 2:1,
+                        labels = c("Not low risk", "Low risk")) +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
+  theme(plot.title = element_text(hjust = 0.5, size = 9),
+        axis.title.x = element_text(hjust = 0.5, size = 9),
+        axis.title.y = element_text(hjust = 0.5, size = 9),
+        legend.position = c(0.15, 0.27),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 # COMPERA 2.0 Panels
 p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$compera2_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "COMPERA 2.0", x = "Years",
-       y = "Prop. survived w/o CW") + 
+  labs(title = "E", x = "Years",
+       y = "Cumulative survival free from CW") + 
+  ylim(c(0.2, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.88, size = 9/.pt,
+           label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
+                              cw_bin) ~ compera2_cat16,
+                              data = dat[dat$cw_day_full > 16*7 &
+                                         !is.na(dat$compera2_cat16), ]))}")) +
   add_confidence_interval() +
+  scale_colour_manual(values = c("grey", "black"),
+                      labels = c("Not low risk", "Low risk")) +
+  scale_fill_manual(values = c("grey", "black"),
+                    labels = c("Not low risk", "Low risk")) +
+  scale_linetype_manual(values = 2:1,
+                        labels = c("Not low risk", "Low risk")) +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
+  theme(plot.title = element_text(hjust = 0.5, size = 9),
+         axis.title.x = element_text(hjust = 0.5, size = 9),
+         axis.title.y = element_text(hjust = 0.5, size = 9),
+         legend.position = c(0.15, 0.27),
+         legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
                 data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$compera2_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "COMPERA 2.0", x = "Years",
-       y = "Prop. survived") + 
+  labs(title = "F", x = "Years",
+       y = "Cumulative survival") + 
+  ylim(c(0.2, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.7, size = 9/.pt,
+           label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
+                              death_bin) ~ compera2_cat16,
+                              data = dat[dat$death_day_full > 16*7 &
+                                         !is.na(dat$compera2_cat16), ]))}")) +
   add_confidence_interval() +
+  scale_colour_manual(values = c("grey", "black"),
+                      labels = c("Not low risk", "Low risk")) +
+  scale_fill_manual(values = c("grey", "black"),
+                    labels = c("Not low risk", "Low risk")) +
+  scale_linetype_manual(values = 2:1,
+                        labels = c("Not low risk", "Low risk")) +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "none")
+  theme(plot.title = element_text(hjust = 0.5, size = 9),
+        axis.title.x = element_text(hjust = 0.5, size = 9),
+        axis.title.y = element_text(hjust = 0.5, size = 9),
+        legend.position = c(0.15, 0.27),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 # FPHR panels
 p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
                 data = dat[dat$cw_day_full > 16*7 &
                              !is.na(dat$fphr_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "FPHR", x = "Years",
-       y = "Prop. survived w/o CW") + 
+  labs(title = "G", x = "Years",
+       y = "Cumulative survival free from CW") +
+  ylim(c(0.2, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.85, size = 9/.pt,
+           label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
+                              cw_bin) ~ fphr_cat16,
+                              data = dat[dat$cw_day_full > 16*7 &
+                                         !is.na(dat$fphr_cat16), ]))}")) +
   add_confidence_interval() +
-  scale_colour_manual(values = c("red", "blue"),
+  scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk")) +
-  scale_fill_manual(values = c("red", "blue"),
-                      labels = c("Not low risk", "Low risk")) +
-  scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "bottom") +
-  theme()
-
-p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
-                data = dat[dat$death_day_full > 16*7 &
-                             !is.na(dat$fphr_cat16), ]) %>% 
-  ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "FPHR", x = "Years",
-       y = "Prop. survived") + 
-  add_confidence_interval() +
-  scale_colour_manual(values = c("red", "blue"),
-                      labels = c("Not low risk", "Low risk")) +
-  scale_fill_manual(values = c("red", "blue"),
+  scale_fill_manual(values = c("grey", "black"),
                     labels = c("Not low risk", "Low risk")) +
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk")) +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 11),
-        legend.position = "bottom")
+  theme(plot.title = element_text(hjust = 0.5, size = 9),
+        axis.title.x = element_text(hjust = 0.5, size = 9),
+        axis.title.y = element_text(hjust = 0.5, size = 9),
+        legend.position = c(0.15, 0.27),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
+
+p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
+                data = dat[dat$death_day_full > 16*7 &
+                             !is.na(dat$fphr_cat16), ]) %>% 
+  ggsurvfit(linetype_aes = TRUE) +
+  labs(title = "H", x = "Years",
+       y = "Cumulative survival") + 
+  ylim(c(0.2, 1)) +
+  annotate("text", x = 1250-16*7, y = 0.7, size = 9/.pt,
+           label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
+                              death_bin) ~ fphr_cat16,
+                              data = dat[dat$death_day_full > 16*7 &
+                                         !is.na(dat$fphr_cat16), ]))}")) +
+  add_confidence_interval() +
+  scale_colour_manual(values = c("grey", "black"),
+                      labels = c("Not low risk", "Low risk")) +
+  scale_fill_manual(values = c("grey", "black"),
+                    labels = c("Not low risk", "Low risk")) +
+  scale_linetype_manual(values = 2:1,
+                        labels = c("Not low risk", "Low risk")) +
+  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
+                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  theme(plot.title = element_text(hjust = 0.5, size = 9),
+        axis.title.x = element_text(hjust = 0.5, size = 9),
+        axis.title.y = element_text(hjust = 0.5, size = 9),
+        legend.position = c(0.15, 0.27),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 
 # Make supplement figure
