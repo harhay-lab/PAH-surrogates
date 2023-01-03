@@ -696,7 +696,7 @@ r2labels <-
 ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
   geom_point(aes(size = w), shape = 21) +
   facet_wrap(~type, nrow = 5) +
-  xlab("Treatment effect on low risk status, log(OR)") +
+  xlab("Treatment effect on low risk status") +
   ylab("Treatment effect on clinical worsening, log(HR)") +
   ylim(-0.1, 0.9) +
   geom_smooth(method='lm', se = FALSE, color = "black", linewidth = 0.5) +
