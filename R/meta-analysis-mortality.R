@@ -79,7 +79,7 @@ dat$studyregion <- as.factor(dat$studyregion)
 ###########################################################################
 # REVEAL 2.0 Meta-analyses
 # Trial-region specific effects and associations
-dat$reveal2_low <- 1*(dat$reveal2_wk16 <= 6)
+dat$reveal2_low <- 1*(round(dat$reveal2_wk16) <= 6)
 
 coef_rev_med <- list()
 coef_rev_out <- list()
@@ -126,7 +126,7 @@ for (i in 1:8) {
 ###########################################################################
 # REVEAL Lite Meta-analyses
 # Trial-region specific effects and associations
-dat$reveal_lite_low <- 1*(dat$reveal_lite_wk16 <= 5)
+dat$reveal_lite_low <- 1*(round(dat$reveal_lite_wk16) <= 5)
 
 coef_revlite_med <- list()
 coef_revlite_out <- list()
@@ -207,10 +207,10 @@ for (i in 1:8) {
 }
 
 trialdat_comp <-
-  data.frame(surreff = c(coef_comp_med[[1]][1, 1], coef_comp_med[[2]][1, 1],
-                         coef_comp_med[[3]][1, 1], coef_comp_med[[4]][1, 1],
-                         coef_comp_med[[5]][1, 1], coef_comp_med[[6]][1, 1],
-                         coef_comp_med[[7]][1, 1], coef_comp_med[[8]][1, 1]),
+  data.frame(surreff = c(coef_comp_med[[1]][2, 1], coef_comp_med[[2]][2, 1],
+                         coef_comp_med[[3]][2, 1], coef_comp_med[[4]][2, 1],
+                         coef_comp_med[[5]][2, 1], coef_comp_med[[6]][2, 1],
+                         coef_comp_med[[7]][2, 1], coef_comp_med[[8]][2, 1]),
              clineff = c(coef_comp_out[[1]][1, 1], coef_comp_out[[2]][1, 1],
                          coef_comp_out[[3]][1, 1], coef_comp_out[[4]][1, 1],
                          coef_comp_out[[5]][1, 1], coef_comp_out[[6]][1, 1],
@@ -259,10 +259,10 @@ for (i in 1:8) {
 }
 
 trialdat_comp2 <-
-  data.frame(surreff = c(coef_comp2_med[[1]][1, 1], coef_comp2_med[[2]][1, 1],
-                         coef_comp2_med[[3]][1, 1], coef_comp2_med[[4]][1, 1],
-                         coef_comp2_med[[5]][1, 1], coef_comp2_med[[6]][1, 1],
-                         coef_comp2_med[[7]][1, 1], coef_comp2_med[[8]][1, 1]),
+  data.frame(surreff = c(coef_comp2_med[[1]][2, 1], coef_comp2_med[[2]][2, 1],
+                         coef_comp2_med[[3]][2, 1], coef_comp2_med[[4]][2, 1],
+                         coef_comp2_med[[5]][2, 1], coef_comp2_med[[6]][2, 1],
+                         coef_comp2_med[[7]][2, 1], coef_comp2_med[[8]][2, 1]),
              clineff = c(coef_comp2_out[[1]][1, 1], coef_comp2_out[[2]][1, 1],
                          coef_comp2_out[[3]][1, 1], coef_comp2_out[[4]][1, 1],
                          coef_comp2_out[[5]][1, 1], coef_comp2_out[[6]][1, 1],
@@ -316,9 +316,9 @@ for (i in c(1, 2, 6, 7, 8)) {
 }
 
 trialdat_fphr <-
-  data.frame(surreff = c(coef_fphr_med[[1]][1, 1], coef_fphr_med[[2]][1, 1],
-                         coef_fphr_med[[6]][1, 1], coef_fphr_med[[7]][1, 1],
-                         coef_fphr_med[[8]][1, 1]),
+  data.frame(surreff = c(coef_fphr_med[[1]][2, 1], coef_fphr_med[[2]][2, 1],
+                         coef_fphr_med[[6]][2, 1], coef_fphr_med[[7]][2, 1],
+                         coef_fphr_med[[8]][2, 1]),
              clineff = c(coef_fphr_out[[1]][1, 1], coef_fphr_out[[2]][1, 1],
                          coef_fphr_out[[6]][1, 1], coef_fphr_out[[7]][1, 1],
                          coef_fphr_out[[8]][1, 1]),
@@ -347,71 +347,46 @@ for (i in 1:8) {
 
 
 # Make combined plot
-par(mfrow = c(2, 3))
+# Make full data for figure
+trialdat_rev$type <- "REVEAL 2.0"
+trialdat_revlite$type <- "REVEAL Lite"
+trialdat_comp$type <- "COMPERA"
+trialdat_comp2$type <- "COMPERA 2.0"
+trialdat_fphr$type <- "FPHR"
+trialdat_full <- rbind(trialdat_rev, trialdat_revlite, trialdat_comp,
+                       trialdat_comp2, trialdat_fphr)
+trialdat_full$type <- factor(trialdat_full$type,
+                             levels = c("REVEAL 2.0", "REVEAL Lite", "COMPERA",
+                                        "COMPERA 2.0", "FPHR"))
 
-newx = seq(min(trialdat_rev$surreff), max(trialdat_rev$surreff), by = 0.005)
-with(trialdat_rev,
-     symbols(x = surreff, y = clineff, circles = n,
-             inches = 1/3, #ylim = c(-1, 0.1), xlim = c(-1.9, 0.6),
-             ylab = "Trt effect on mortality: log(HR)",
-             xlab = "Trt effect on surrogate: log(OR)",
-             main = "REVEAL 2.0"))
-abline(lm(clineff ~ surreff, data = trialdat_rev, weights = w))
-abline(h = 0, lty = 2)
-text(-0.05, 0.3, bquote(R^2 ==
-                          .(round(summary(trialmod_rev)$r.squared, 2))))
+r2labels <-
+  data.frame(r2label = c(round(summary(trialmod_rev)$r.squared, 2),
+                         round(summary(trialmod_revlite)$r.squared, 2),
+                         round(summary(trialmod_comp)$r.squared, 2),
+                         round(summary(trialmod_comp2)$r.squared, 2),
+                         round(summary(trialmod_fphr)$r.squared, 2)),
+             type = factor(c("REVEAL 2.0", "REVEAL Lite", "COMPERA",
+                             "COMPERA 2.0", "FPHR"),
+                           levels = c("REVEAL 2.0", "REVEAL Lite", "COMPERA",
+                                      "COMPERA 2.0", "FPHR")))
 
-newx = seq(min(trialdat_revlite$surreff), max(trialdat_revlite$surreff),
-           by = 0.005)
-with(trialdat_revlite,
-     symbols(x = surreff, y = clineff, circles = n,
-             inches = 1/3, #ylim = c(-1, 0.1), xlim = c(-1.9, 3.6),
-             ylab = "Trt effect on mortality: log(HR)",
-             xlab = "Trt effect on surrogate: log(OR)",
-             main = "REVEAL Lite"))
-abline(lm(clineff ~ surreff, data = trialdat_revlite, weights = w))
-abline(h = 0, lty = 2)
-text(0.08, 0.3, bquote(R^2 ==
-                          .(round(summary(trialmod_revlite)$r.squared, 2))))
-
-newx = seq(min(trialdat_comp$surreff), max(trialdat_comp$surreff), by = 0.005)
-with(trialdat_comp,
-     symbols(x = surreff, y = clineff, circles = n,
-             inches = 1/3, #ylim = c(-1.1, 0.1), #xlim = c(-1.9, 2),
-             ylab = "Trt effect on mortality: log(HR)",
-             xlab = "Trt effect on surrogate: log(OR)",
-             main = "COMPERA"))
-abline(lm(clineff ~ surreff, data = trialdat_comp, weights = w))
-abline(h = 0, lty = 2)
-text(-1.2, 0.3, bquote(R^2 ==
-                          .(round(summary(trialmod_comp)$r.squared, 2))))
-
-newx = seq(min(trialdat_comp2$surreff), max(trialdat_comp2$surreff),
-           by = 0.005)
-with(trialdat_comp2,
-     symbols(x = surreff, y = clineff, circles = n,
-             inches = 1/3, #ylim = c(-1.1, 0.1), #xlim = c(-2.9, 0.5),
-             ylab = "Trt effect on mortality: log(HR)",
-             xlab = "Trt effect on surrogate: log(OR)",
-             main = "COMPERA 2.0"))
-abline(lm(clineff ~ surreff, data = trialdat_comp2, weights = w))
-abline(h = 0, lty = 2)
-text(-1.4, 0.3, bquote(R^2 ==
-                          .(round(summary(trialmod_comp2)$r.squared, 2))))
-
-newx = seq(min(trialdat_fphr$surreff), max(trialdat_fphr$surreff),
-           by = 0.005)
-with(trialdat_fphr,
-     symbols(x = surreff, y = clineff, circles = n,
-             inches = 1/3, #ylim = c(-1.1, 0.1), #xlim = c(-1, 3),
-             ylab = "Trt effect on mortality: log(HR)",
-             xlab = "Trt effect on surrogate: log(OR)",
-             main = "FPHR (non-inv)"))
-abline(lm(clineff ~ surreff, data = trialdat_fphr, weights = w))
-abline(h = 0, lty = 2)
-text(-1, 0.3, bquote(R^2 ==
-                          .(round(summary(trialmod_fphr)$r.squared, 2))))
-
+# Make figure
+ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
+  geom_point(aes(size = w), shape = 21) +
+  facet_wrap(~type, nrow = 5) +
+  xlab("Treatment effect on low risk status, log(OR)") +
+  ylab("Treatment effect on mortality, log(HR)") +
+  ylim(-2, 0.5) +
+  geom_smooth(method = 'lm', mapping = aes(weight = w), se = FALSE,
+              color = "black", linewidth = 0.5) +
+  geom_hline(yintercept = 0, lty = 2) +
+  #annotate("text", x = 0.6, y = -0.75, label = r2label)
+  geom_text(data = r2labels, size = 3.25,
+            aes(x = 0.6, y = -0.75,
+                label = paste("R^2", " == ", r2label, sep = "")),
+            parse = TRUE) +
+  theme_bw() +
+  guides(size = "none")
 
 # Make leave-one-out table
 loo_tab <-
