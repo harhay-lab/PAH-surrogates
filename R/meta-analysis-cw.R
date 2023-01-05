@@ -377,7 +377,8 @@ ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
   xlab("Treatment effect on low risk status, log(OR)") +
   ylab("Treatment effect on clinical worsening, log(HR)") +
   ylim(-1, 0.1) +
-  geom_smooth(method='lm', se = FALSE, color = "black", linewidth = 0.5) +
+  geom_smooth(method = 'lm', mapping = aes(weight = w), se = FALSE,
+              color = "black", linewidth = 0.5) +
   geom_hline(yintercept = 0, lty = 2) +
   #annotate("text", x = 0.6, y = -0.75, label = r2label)
   geom_text(data = r2labels, size = 3.25,
@@ -699,7 +700,8 @@ ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
   xlab("Treatment effect on low risk status") +
   ylab("Treatment effect on clinical worsening, log(HR)") +
   ylim(-0.1, 0.9) +
-  geom_smooth(method='lm', se = FALSE, color = "black", linewidth = 0.5) +
+  geom_smooth(method = 'lm', mapping = aes(weight = w), se = FALSE,
+              color = "black", linewidth = 0.5) +
   geom_hline(yintercept = 0, lty = 2) +
   #annotate("text", x = 0.6, y = -0.75, label = r2label)
   geom_text(data = r2labels, size = 3.25,
