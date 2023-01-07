@@ -46,6 +46,9 @@ dat$cw_bin[dat$cw == "CLINICAL WORSENING #1"] <- 1
 dat$death_bin <- 0
 dat$death_bin[dat$death == "DEATH"] <- 1
 
+# Make control variable a new type
+dat$studyid_f <- as.factor(dat$studyid)
+
 # Make ordinal scores into factor variables
 dat$compera_cat0 <- factor(round(dat$compera_full_wk0))
 levels(dat$compera_cat0) <- c("Low", "Intermediate", "High")
@@ -176,6 +179,63 @@ mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
 
 
 
+
+
+############################################################################
+# Sensitivity analysis: Ordinal risk scores
+
+# REVEAL 2.0, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + reveal2_wk0 + factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal2_wk16 + reveal2_wk0 +
+  factor(studyid_f)
+treat <- "trt"
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+
+# REVEAL Lite, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk0 +
+  factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk16 +
+  reveal_lite_wk0 + factor(studyid_f)
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+
+# COMPERA, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_wk0 +
+  factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_wk16 +
+  compera_full_wk0 + factor(studyid_f)
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R=1000)
+
+
+# COMPERA 2, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk0 +
+  factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk16 +
+  compera_2_wk0 + factor(studyid_f)
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+
+# FPHR, clinical worsening
+model.mar <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk0 +
+  factor(studyid_f)
+model.con <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk16 +
+  fphr_noninv_wk0 + factor(studyid_f)
+
+mediate_surv(model.mar, model.con, treat, dat)
+mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+
+
+
 ############################################################################
 # Sensitivity analysis: Use AFT models
 
@@ -262,3 +322,4 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_low +
 
 mediate_aft(model.mar, model.con, treat, dat)
 mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
+
