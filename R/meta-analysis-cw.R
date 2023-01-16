@@ -1022,14 +1022,14 @@ ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
   geom_point(aes(size = w), shape = 21) +
   facet_wrap(~type, nrow = 5) +
   xlab("Treatment effect on ordinal risk score, log(OR)") +
-  ylab("Treatment effect on clinical worsening") +
+  ylab("Treatment effect on clinical worsening, log(HR)") +
   ylim(-1, 0.1) +
   geom_smooth(method = 'lm', mapping = aes(weight = w), se = FALSE,
               color = "black", linewidth = 0.5) +
   geom_hline(yintercept = 0, lty = 2) +
   #annotate("text", x = 0.6, y = -0.75, label = r2label)
   geom_text(data = r2labels, size = 3.25,
-            aes(x = 0.25, y = -0.75,
+            aes(x = 0.15, y = -0.75,
                 label = paste("R^2", " == ", r2label, sep = "")),
             parse = TRUE) +
   theme_bw() +
