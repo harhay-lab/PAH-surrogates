@@ -79,7 +79,7 @@ p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
   labs(title = "A", x = "Years",
        y = "Cumulative survival free from clinical worsening") +
   ylim(c(0.25, 1)) +
-  annotate("text", x = 1250, y = 0.67,
+  annotate("text", x = 1250, y = 0.67, size = 3,
     label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full,
                        cw_bin) ~ trt, data = dat))}")) +
   add_confidence_interval() +
@@ -91,8 +91,9 @@ p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
-        legend.position = c(0.15, 0.15),
-        legend.background = element_rect(fill = "white", color = "black"))
+        legend.position = c(0.25, 0.15),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
                data = dat) %>% 
@@ -100,7 +101,7 @@ p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
   labs(title = "B", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.25, 1)) +
-  annotate("text", x = 1250, y = 0.75,
+  annotate("text", x = 1250, y = 0.75, size = 3,
            label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full,
                               death_bin) ~ trt, data = dat))}")) +
   add_confidence_interval() +
@@ -112,8 +113,9 @@ p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
-        legend.position = c(0.15, 0.15),
-        legend.background = element_rect(fill = "white", color = "black"))
+        legend.position = c(0.25, 0.15),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 # COMPERA panels
 p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
@@ -123,7 +125,7 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
   labs(title = "C", x = "Years",
        y = "Cumulative survival free from clinical worsening") + 
   ylim(c(0.25, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.85,
+  annotate("text", x = 1250-16*7, y = 0.85, size = 3,
            label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
                               cw_bin) ~ compera_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
@@ -140,8 +142,9 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
-        legend.position = c(0.15, 0.15),
-        legend.background = element_rect(fill = "white", color = "black"))
+        legend.position = c(0.25, 0.15),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
                data = dat[dat$death_day_full > 16*7 &
@@ -150,7 +153,7 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
   labs(title = "D", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.25, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.7,
+  annotate("text", x = 1250-16*7, y = 0.7, size = 3,
            label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
                               death_bin) ~ compera_cat16,
                               data = dat[dat$death_day_full > 16*7 &
@@ -167,8 +170,9 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
-        legend.position = c(0.15, 0.15),
-        legend.background = element_rect(fill = "white", color = "black"))
+        legend.position = c(0.25, 0.15),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 9))
 
 # Make figure for paper
 pdf("Output/kaplan-meier-figure.pdf", height = 7.5, width = 6)
@@ -191,7 +195,7 @@ p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
   labs(title = "A", x = "Years",
        y = "Cumulative survival free from CW") + 
   ylim(c(0.2, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.85, size = 9/.pt,
+  annotate("text", x = 1250-16*7, y = 0.85, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
                               cw_bin) ~ reveal_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
@@ -208,9 +212,10 @@ p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 9),
         axis.title.y = element_text(hjust = 0.5, size = 9),
-        legend.position = c(0.15, 0.27),
+        legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.45, "cm"))
 
 p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
                data = dat[dat$death_day_full > 16*7 &
@@ -219,7 +224,7 @@ p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
   labs(title = "B", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.7, size = 9/.pt,
+  annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
                               death_bin) ~ reveal_cat16,
                               data = dat[dat$death_day_full > 16*7 &
@@ -236,9 +241,10 @@ p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 9),
         axis.title.y = element_text(hjust = 0.5, size = 9),
-        legend.position = c(0.15, 0.27),
+        legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.45, "cm"))
 
 # REVEAL Lite panels
 p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
@@ -248,7 +254,7 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
   labs(title = "C", x = "Years",
        y = "Cumulative survival free from CW") + 
   ylim(c(0.2, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.85, size = 9/.pt,
+  annotate("text", x = 1250-16*7, y = 0.85, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
                               cw_bin) ~ reveal_lite_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
@@ -265,9 +271,10 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 9),
         axis.title.y = element_text(hjust = 0.5, size = 9),
-        legend.position = c(0.15, 0.27),
+        legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.45, "cm"))
 
 p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
                data = dat[dat$death_day_full > 16*7 &
@@ -277,7 +284,7 @@ p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   add_confidence_interval() +
-  annotate("text", x = 1250-16*7, y = 0.67, size = 9/.pt,
+  annotate("text", x = 1250-16*7, y = 0.67, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
                               death_bin) ~ reveal_lite_cat16,
                               data = dat[dat$death_day_full > 16*7 &
@@ -293,9 +300,10 @@ p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 9),
         axis.title.y = element_text(hjust = 0.5, size = 9),
-        legend.position = c(0.15, 0.27),
+        legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.45, "cm"))
 
 # COMPERA 2.0 Panels
 p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
@@ -305,7 +313,7 @@ p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
   labs(title = "E", x = "Years",
        y = "Cumulative survival free from CW") + 
   ylim(c(0.2, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.88, size = 9/.pt,
+  annotate("text", x = 1250-16*7, y = 0.88, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
                               cw_bin) ~ compera2_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
@@ -322,9 +330,10 @@ p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 9),
          axis.title.x = element_text(hjust = 0.5, size = 9),
          axis.title.y = element_text(hjust = 0.5, size = 9),
-         legend.position = c(0.15, 0.27),
+         legend.position = c(0.2, 0.27),
          legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.45, "cm"))
 
 p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
                 data = dat[dat$death_day_full > 16*7 &
@@ -333,7 +342,7 @@ p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
   labs(title = "F", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.7, size = 9/.pt,
+  annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
                               death_bin) ~ compera2_cat16,
                               data = dat[dat$death_day_full > 16*7 &
@@ -350,9 +359,10 @@ p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 9),
         axis.title.y = element_text(hjust = 0.5, size = 9),
-        legend.position = c(0.15, 0.27),
+        legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.45, "cm"))
 
 # FPHR panels
 p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
@@ -362,7 +372,7 @@ p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
   labs(title = "G", x = "Years",
        y = "Cumulative survival free from CW") +
   ylim(c(0.2, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.85, size = 9/.pt,
+  annotate("text", x = 1250-16*7, y = 0.85, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
                               cw_bin) ~ fphr_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
@@ -379,9 +389,10 @@ p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 9),
         axis.title.y = element_text(hjust = 0.5, size = 9),
-        legend.position = c(0.15, 0.27),
+        legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.45, "cm"))
 
 p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
                 data = dat[dat$death_day_full > 16*7 &
@@ -390,7 +401,7 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
   labs(title = "H", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
-  annotate("text", x = 1250-16*7, y = 0.7, size = 9/.pt,
+  annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
                               death_bin) ~ fphr_cat16,
                               data = dat[dat$death_day_full > 16*7 &
@@ -407,12 +418,13 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 9),
         axis.title.y = element_text(hjust = 0.5, size = 9),
-        legend.position = c(0.15, 0.27),
+        legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.45, "cm"))
 
 
 # Make supplement figure
-pdf("kaplan-meier-figure2.pdf", height = 8.5, width = 6)
+pdf("Output/kaplan-meier-figure2.pdf", height = 7.5, width = 6)
 grid.arrange(p5, p6, p7, p8, p9, p10, p11, p12, nrow = 4)
 dev.off()
