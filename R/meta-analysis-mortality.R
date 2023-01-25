@@ -112,6 +112,7 @@ trialdat_rev <-
              n = c(table(dat$studyregion)))
 
 trialmod_rev <- lm(clineff ~ surreff, data = trialdat_rev, weights = w)
+r2label_rev <- round(summary(trialmod_rev)$r.squared, 2)
 
 # Leave-one-out analysis
 loo_preds_rev <- rep(NA, 8)
@@ -171,6 +172,7 @@ trialdat_revlite <-
              n = c(table(dat$studyregion)))
 
 trialmod_revlite <- lm(clineff ~ surreff, data = trialdat_revlite, weights = w)
+r2label_revlite <- round(summary(trialmod_revlite)$r.squared, 2)
 
 # Leave-one-out analysis
 loo_preds_revlite <- rep(NA, 8)
@@ -222,6 +224,7 @@ trialdat_comp <-
              n = c(table(dat$studyregion)))
 
 trialmod_comp <- lm(clineff ~ surreff, data = trialdat_comp, weights = w)
+r2label_comp <- round(summary(trialmod_comp)$r.squared, 2)
 
 # Leave-one-out analysis
 loo_preds_comp <- rep(NA, 8)
@@ -278,6 +281,7 @@ trialdat_comp2 <-
              n = c(table(dat$studyregion)))
 
 trialmod_comp2 <- lm(clineff ~ surreff, data = trialdat_comp2, weights = w)
+r2label_comp2 <- round(summary(trialmod_comp2)$r.squared, 2)
 
 # Leave-one-out analysis
 loo_preds_comp2 <- rep(NA, 8)
@@ -330,6 +334,7 @@ trialdat_fphr <-
              n = c(table(dat$studyregion)[c(1, 2, 6, 7, 8)]))
 
 trialmod_fphr <- lm(clineff ~ surreff, data = trialdat_fphr, weights = w)
+r2label_fphr <- round(summary(trialmod_fphr)$r.squared, 2)
 
 # Leave-one-out analysis
 loo_preds_fphr <- rep(NA, 8)
@@ -349,31 +354,28 @@ for (i in 1:8) {
 # Make combined plot
 # Make full data for figure
 trialdat_rev$type <- "REVEAL 2.0"
-trialdat_revlite$type <- "REVEAL Lite"
+trialdat_revlite$type <- "REVEAL Lite 2"
 trialdat_comp$type <- "COMPERA"
 trialdat_comp2$type <- "COMPERA 2.0"
 trialdat_fphr$type <- "FPHR"
 trialdat_full <- rbind(trialdat_rev, trialdat_revlite, trialdat_comp,
                        trialdat_comp2, trialdat_fphr)
 trialdat_full$type <- factor(trialdat_full$type,
-                             levels = c("REVEAL 2.0", "REVEAL Lite", "COMPERA",
-                                        "COMPERA 2.0", "FPHR"))
+                             levels = c("REVEAL 2.0", "REVEAL Lite 2",
+                                        "COMPERA", "COMPERA 2.0", "FPHR"))
 
 r2labels <-
-  data.frame(r2label = c(round(summary(trialmod_rev)$r.squared, 2),
-                         round(summary(trialmod_revlite)$r.squared, 2),
-                         round(summary(trialmod_comp)$r.squared, 2),
-                         round(summary(trialmod_comp2)$r.squared, 2),
-                         round(summary(trialmod_fphr)$r.squared, 2)),
-             type = factor(c("REVEAL 2.0", "REVEAL Lite", "COMPERA",
+  data.frame(r2label = c(r2label_rev, r2label_revlite, r2label_comp,
+                         r2label_comp2, r2label_fphr),
+             type = factor(c("REVEAL 2.0", "REVEAL Lite 2", "COMPERA",
                              "COMPERA 2.0", "FPHR"),
-                           levels = c("REVEAL 2.0", "REVEAL Lite", "COMPERA",
+                           levels = c("REVEAL 2.0", "REVEAL Lite 2", "COMPERA",
                                       "COMPERA 2.0", "FPHR")))
 
 # Make figure
 ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
   geom_point(aes(size = w), shape = 21) +
-  facet_wrap(~type, nrow = 5) +
+  facet_wrap(~type, nrow = 2) +
   xlab("Treatment effect on low risk status, log(OR)") +
   ylab("Treatment effect on mortality, log(HR)") +
   ylim(-2, 0.5) +
@@ -382,7 +384,7 @@ ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
   geom_hline(yintercept = 0, lty = 2) +
   #annotate("text", x = 0.6, y = -0.75, label = r2label)
   geom_text(data = r2labels, size = 3.25,
-            aes(x = 0.6, y = -0.75,
+            aes(x = 0.5, y = -1.5,
                 label = paste("R^2", " == ", r2label, sep = "")),
             parse = TRUE) +
   theme_bw() +
@@ -392,7 +394,7 @@ ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
 loo_tab <-
   data.frame("Observed trial log(HR)" = round(exp(trialdat_rev$clineff), 2),
              "REVEAL 2.0" = round(exp(loo_preds_rev), 2),
-             "REVEAL Lite" = round(exp(loo_preds_revlite), 2),
+             "REVEAL Lite 2" = round(exp(loo_preds_revlite), 2),
              "COMPERA" = round(exp(loo_preds_comp), 2),
              "COMPERA 2.0" = round(exp(loo_preds_comp2), 2),
              "FPHR (non-inv)" = round(c(exp(loo_preds_fphr[1:2]), NA, NA, NA,
