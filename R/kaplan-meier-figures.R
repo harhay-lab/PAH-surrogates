@@ -25,6 +25,7 @@ dat$compera_2_wk16[is.na(dat$compera_2_wk16)] <-
 
 # Make numeric treatment variable
 dat$trt <- dat$study_arm_assignment
+dat$trt[dat$trt == "Active"] <- "Experimental"
 
 # Make low risk variables
 # Low REVEAL 2.0
@@ -83,10 +84,12 @@ p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
     label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full,
                        cw_bin) ~ trt, data = dat))}")) +
   add_confidence_interval() +
-  scale_colour_manual(breaks = c("Active", "Control"),
+  scale_colour_manual(breaks = c("Control", "Experimental"),
                       values = c("grey", "black")) +
-  scale_fill_manual(breaks = c("Active", "Control"),
-                      values = c("grey", "black")) +
+  scale_fill_manual(breaks = c("Control", "Experimental"),
+                    values = c("grey", "black")) +
+  scale_linetype_manual(values = 1:2,
+                        labels = c("Control", "Experimental")) +
   scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
@@ -105,10 +108,12 @@ p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
            label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full,
                               death_bin) ~ trt, data = dat))}")) +
   add_confidence_interval() +
-  scale_colour_manual(breaks = c("Active", "Control"),
+  scale_colour_manual(breaks = c("Control", "Experimental"),
                       values = c("grey", "black")) +
-  scale_fill_manual(breaks = c("Active", "Control"),
+  scale_fill_manual(breaks = c("Control", "Experimental"),
                     values = c("grey", "black")) +
+  scale_linetype_manual(values = 1:2,
+                        labels = c("Control", "Experimental")) +
   scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
@@ -221,7 +226,7 @@ p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$reveal_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "B", x = "Years",
+  labs(title = "A", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
@@ -251,7 +256,7 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$reveal_lite_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "C", x = "Years",
+  labs(title = "B", x = "Years",
        y = "Cumulative survival free from CW") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.85, size = 6/.pt,
@@ -280,7 +285,7 @@ p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$reveal_lite_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "D", x = "Years",
+  labs(title = "B", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   add_confidence_interval() +
@@ -310,7 +315,7 @@ p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$compera2_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "E", x = "Years",
+  labs(title = "C", x = "Years",
        y = "Cumulative survival free from CW") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.88, size = 6/.pt,
@@ -339,7 +344,7 @@ p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
                 data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$compera2_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "F", x = "Years",
+  labs(title = "C", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
@@ -369,7 +374,7 @@ p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
                 data = dat[dat$cw_day_full > 16*7 &
                              !is.na(dat$fphr_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "G", x = "Years",
+  labs(title = "D", x = "Years",
        y = "Cumulative survival free from CW") +
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.85, size = 6/.pt,
@@ -398,7 +403,7 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
                 data = dat[dat$death_day_full > 16*7 &
                              !is.na(dat$fphr_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "H", x = "Years",
+  labs(title = "D", x = "Years",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
@@ -424,7 +429,11 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
         legend.key.size = unit(0.45, "cm"))
 
 
-# Make supplement figure
+# Make supplement figures
 pdf("Output/kaplan-meier-figure2.pdf", height = 7.5, width = 6)
-grid.arrange(p5, p6, p7, p8, p9, p10, p11, p12, nrow = 4)
+grid.arrange(p5, p7, p9, p11, nrow = 2)
+dev.off()
+
+pdf("Output/kaplan-meier-figure3.pdf", height = 7.5, width = 6)
+grid.arrange(p6, p8, p10, p12, nrow = 2)
 dev.off()
