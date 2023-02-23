@@ -189,7 +189,7 @@ for (i in 1:8) {
 ###########################################################################
 # COMPERA Meta-analyses
 # Trial-region specific effects and associations
-dat$compera_cat16 <- factor(round(dat$compera_full_wk16))
+dat$compera_cat16 <- factor(round(dat$compera_full_wk16 + 0.01))
 levels(dat$compera_cat16) <- c("Low", "Intermediate", "High")
 dat$compera_full_low <- 1*(dat$compera_cat16 == "Low")
 
@@ -241,7 +241,7 @@ for (i in 1:8) {
 ###########################################################################
 # COMPERA 2.0 Meta-analyses
 # Trial-region specific effects and associations
-dat$compera2_cat16 <- factor(round(dat$compera_2_wk16))
+dat$compera2_cat16 <- factor(round(dat$compera_2_wk16 + 0.01))
 levels(dat$compera2_cat16) <- c("Low", "Intermediate-Low",
                                 "Intermediate-High", "High")
 dat$compera_2_low <- 1*(dat$compera2_cat16 == "Low")
