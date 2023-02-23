@@ -50,15 +50,16 @@ dat$death_bin[dat$death == "DEATH"] <- 1
 dat$studyid_f <- as.factor(dat$studyid)
 
 # Make ordinal scores into factor variables
-dat$compera_cat0 <- factor(round(dat$compera_full_wk0))
+# Rounding in R works weird, add 0.01 to achieve desired effect
+dat$compera_cat0 <- factor(round(dat$compera_full_wk0 + 0.01))
 levels(dat$compera_cat0) <- c("Low", "Intermediate", "High")
-dat$compera_cat16 <- factor(round(dat$compera_full_wk16))
+dat$compera_cat16 <- factor(round(dat$compera_full_wk16 + 0.01))
 levels(dat$compera_cat16) <- c("Low", "Intermediate", "High")
 
-dat$compera2_cat0 <- factor(round(dat$compera_2_wk0))
+dat$compera2_cat0 <- factor(round(dat$compera_2_wk0 + 0.01))
 levels(dat$compera2_cat0) <- c("Low", "Intermediate-Low",
                                "Intermediate-High", "High")
-dat$compera2_cat16 <- factor(round(dat$compera_2_wk16))
+dat$compera2_cat16 <- factor(round(dat$compera_2_wk16 + 0.01))
 levels(dat$compera2_cat16) <- c("Low", "Intermediate-Low",
                                 "Intermediate-High", "High")
 
@@ -128,6 +129,10 @@ treat <- "trt"
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
 
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
+
 # REVEAL 2.0 example for survival
 #model.mar <- Surv(death_day_full, death_bin) ~ trt + reveal2_wk0 +
                                                #factor(studyid_f)
@@ -147,6 +152,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_low +
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
 
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
+
 
 # COMPERA, clinical worsening
 model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_wk0 +
@@ -156,6 +165,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_low +
 
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R=1000)
+
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
 
 
 # COMPERA 2, clinical worsening
@@ -167,6 +180,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_low +
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
 
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
+
 
 # FPHR, clinical worsening
 model.mar <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk0 +
@@ -176,6 +193,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_low +
 
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
 
 
 
@@ -193,6 +214,10 @@ treat <- "trt"
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
 
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
+
 
 # REVEAL Lite, clinical worsening
 model.mar <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk0 +
@@ -202,6 +227,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk16 +
 
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
 
 
 # COMPERA, clinical worsening
@@ -213,6 +242,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_wk16 +
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R=1000)
 
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
+
 
 # COMPERA 2, clinical worsening
 model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk0 +
@@ -223,6 +256,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk16 +
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
 
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
+
 
 # FPHR, clinical worsening
 model.mar <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk0 +
@@ -232,6 +269,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_wk16 +
 
 mediate_surv(model.mar, model.con, treat, dat)
 mediate_surv_ci(model.mar, model.con, treat, dat, R = 1000)
+
+mediate_surv(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_surv_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+                R = 1000)
 
 
 
@@ -283,6 +324,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal2_low + reveal2_wk0 +
 mediate_aft(model.mar, model.con, treat, dat)
 mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
 
+mediate_aft(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_aft_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+               R = 1000)
+
 
 # REVEAL Lite, clinical worsening, AFT
 model.mar <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_wk0 +
@@ -292,6 +337,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + reveal_lite_low +
 
 mediate_aft(model.mar, model.con, treat, dat)
 mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
+
+mediate_aft(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_aft_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+               R = 1000)
 
 
 # COMPERA, clinical worsening, AFT
@@ -303,6 +352,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_full_low +
 mediate_aft(model.mar, model.con, treat, dat)
 mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
 
+mediate_aft(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_aft_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+               R = 1000)
+
 
 # COMPERA 2, clinical worsening, AFT
 model.mar <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_wk0 +
@@ -312,6 +365,10 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + compera_2_low + compera_2_wk0 +
 
 mediate_aft(model.mar, model.con, treat, dat)
 mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
+
+mediate_aft(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_aft_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+               R = 1000)
 
 
 # FPHR, clinical worsening, AFT
@@ -323,3 +380,6 @@ model.con <- Surv(cw_day_full, cw_bin) ~ trt + fphr_noninv_low +
 mediate_aft(model.mar, model.con, treat, dat)
 mediate_aft_ci(model.mar, model.con, treat, dat, R = 1000)
 
+mediate_aft(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ])
+mediate_aft_ci(model.mar, model.con, treat, dat[dat$cw_day_full >= 7*16, ],
+               R = 1000)
