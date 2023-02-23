@@ -38,15 +38,15 @@ dat$reveal_lite_cat16 <- NA
 dat$reveal_lite_cat16[round(dat$reveal_lite_wk16) <= 5] <- 1
 dat$reveal_lite_cat16[round(dat$reveal_lite_wk16) >= 6] <- 0
 
-# Categorical COMPERA
+# Categorical COMPERA (round to avoid R issues)
 dat$compera_cat16 <- NA
-dat$compera_cat16[round(dat$compera_full_wk16) == 1] <- 1
-dat$compera_cat16[round(dat$compera_full_wk16) != 1] <- 0
+dat$compera_cat16[round(dat$compera_full_wk16 + 0.01) == 1] <- 1
+dat$compera_cat16[round(dat$compera_full_wk16 + 0.01) != 1] <- 0
 
 # Categorical COMPERA 2.0
 dat$compera2_cat16 <- NA
-dat$compera2_cat16[round(dat$compera_2_wk16) == 1] <- 1
-dat$compera2_cat16[round(dat$compera_2_wk16) != 1] <- 0
+dat$compera2_cat16[round(dat$compera_2_wk16 + 0.01) == 1] <- 1
+dat$compera2_cat16[round(dat$compera_2_wk16 + 0.01) != 1] <- 0
 
 # Categorical FPHR (non-inv)
 dat$fphr_cat16 <- NA
