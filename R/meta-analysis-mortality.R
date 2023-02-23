@@ -75,9 +75,6 @@ dat$studyregion[dat$studyid == 1013 & dat$country %in% r8list] <-
   "Trial 3: Asia"
 dat$studyregion <- as.factor(dat$studyregion)
 
-# Subset to analysis data set
-dat <- dat[dat$cw_day_full >= 7*16, ]
-
 
 ###########################################################################
 # REVEAL 2.0 Meta-analyses
