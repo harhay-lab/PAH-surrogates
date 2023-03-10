@@ -78,8 +78,6 @@ dat$studyregion[dat$studyid == 1013 & dat$country %in% r8list] <-
   "Trial 3: Asia"
 dat$studyregion <- as.factor(dat$studyregion)
 
-# Subset to analysis data set
-dat <- dat[dat$cw_day_full >= 7*16, ]
 
 
 ###########################################################################
@@ -92,10 +90,12 @@ coef_rev_out <- list()
 for (i in 1:8) {
 
   med_mod <- glm(reveal2_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
 
   coef_rev_med[[i]] <- summary(med_mod)$coefficients
   coef_rev_out[[i]] <- summary(out_mod)$coefficients
@@ -140,10 +140,12 @@ coef_revlite_out <- list()
 for (i in 1:8) {
 
   med_mod <- glm(reveal_lite_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
 
   coef_revlite_med[[i]] <- summary(med_mod)$coefficients
   coef_revlite_out[[i]] <- summary(out_mod)$coefficients
@@ -205,10 +207,12 @@ coef_comp_out <- list()
 for (i in 1:8) {
 
   med_mod <- glm(compera_full_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
 
   coef_comp_med[[i]] <- summary(med_mod)$coefficients
   coef_comp_out[[i]] <- summary(out_mod)$coefficients
@@ -258,10 +262,12 @@ coef_comp2_out <- list()
 for (i in 1:8) {
 
   med_mod <- glm(compera_2_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
 
   coef_comp2_med[[i]] <- summary(med_mod)$coefficients
   coef_comp2_out[[i]] <- summary(out_mod)$coefficients
@@ -316,10 +322,12 @@ coef_fphr_out <- list()
 for (i in c(1, 2, 6, 7, 8)) {
 
   med_mod <- glm(fphr_noninv_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
 
   coef_fphr_med[[i]] <- summary(med_mod)$coefficients
   coef_fphr_out[[i]] <- summary(out_mod)$coefficients
@@ -436,10 +444,12 @@ coef_rev_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(reveal2_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- survreg(Surv(cw_day_full, cw_bin) ~ trt, dist = "weibull",
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
   coef_rev_med[[i]] <- summary(med_mod)$coefficients
   coef_rev_out[[i]] <- summary(out_mod)$table
   
@@ -481,10 +491,12 @@ coef_revlite_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(reveal_lite_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- survreg(Surv(cw_day_full, cw_bin) ~ trt, dist = "weibull",
-                  data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                  data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                               dat$cw_day_full >= 7*16, ])
   
   coef_revlite_med[[i]] <- summary(med_mod)$coefficients
   coef_revlite_out[[i]] <- summary(out_mod)$table
@@ -541,10 +553,12 @@ coef_comp_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(compera_full_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- survreg(Surv(cw_day_full, cw_bin) ~ trt, dist = "weibull",
-                  data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                  data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                               dat$cw_day_full >= 7*16, ])
   
   coef_comp_med[[i]] <- summary(med_mod)$coefficients
   coef_comp_out[[i]] <- summary(out_mod)$table
@@ -589,10 +603,12 @@ coef_comp2_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(compera_2_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- survreg(Surv(cw_day_full, cw_bin) ~ trt, dist = "weibull",
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ])
   
   coef_comp2_med[[i]] <- summary(med_mod)$coefficients
   coef_comp2_out[[i]] <- summary(out_mod)$table
@@ -641,10 +657,12 @@ coef_fphr_out <- list()
 for (i in c(1, 2, 6, 7, 8)) {
   
   med_mod <- glm(fphr_noninv_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ],
                  family = "binomial")
   out_mod <- survreg(Surv(cw_day_full, cw_bin) ~ trt, dist = "weibull",
-                  data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                  data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                               dat$cw_day_full >= 7*16, ])
   
   coef_fphr_med[[i]] <- summary(med_mod)$coefficients
   coef_fphr_out[[i]] <- summary(out_mod)$table
@@ -760,9 +778,11 @@ coef_rev_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(reveal2_wk16 ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ])
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
   
   coef_rev_med[[i]] <- summary(med_mod)$coefficients
   coef_rev_out[[i]] <- summary(out_mod)$coefficients
@@ -805,9 +825,11 @@ coef_revlite_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(reveal_lite_wk16 ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                 data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                              dat$cw_day_full >= 7*16, ])
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
   
   coef_revlite_med[[i]] <- summary(med_mod)$coefficients
   coef_revlite_out[[i]] <- summary(out_mod)$coefficients
@@ -866,9 +888,11 @@ coef_comp_out <- list()
 for (i in 1:8) {
   
   med_mod <- polr(factor(compera_cat16) ~ trt,
-                  data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                  data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                               dat$cw_day_full >= 7*16, ])
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
   
   coef_comp_med[[i]] <- summary(med_mod)$coefficients
   coef_comp_out[[i]] <- summary(out_mod)$coefficients
@@ -915,9 +939,11 @@ coef_comp2_out <- list()
 for (i in 1:8) {
   
   med_mod <- polr(factor(compera2_cat16) ~ trt,
-                  data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                  data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                               dat$cw_day_full >= 7*16, ])
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
   
   coef_comp2_med[[i]] <- summary(med_mod)$coefficients
   coef_comp2_out[[i]] <- summary(out_mod)$coefficients
@@ -970,9 +996,11 @@ coef_fphr_out <- list()
 for (i in c(1, 2, 6, 7, 8)) {
   
   med_mod <- polr(factor(fphr_cat16) ~ trt,
-                  data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                  data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                               dat$cw_day_full >= 7*16, ])
   out_mod <- coxph(Surv(cw_day_full, cw_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+                   data = dat[dat$studyregion == unique(dat$studyregion)[i] &
+                                dat$cw_day_full >= 7*16, ])
   
   coef_fphr_med[[i]] <- summary(med_mod)$coefficients
   coef_fphr_out[[i]] <- summary(out_mod)$coefficients
@@ -1061,12 +1089,12 @@ loo_tab <-
                                         exp(loo_preds_fphr[3:5])), 2))
 
 # Output table
-ft <- flextable(loo_tab) %>%
+ft3 <- flextable(loo_tab) %>%
   theme_zebra()
 #ft <- width(ft, j = 1, width = 2.5)
 
 # Export table to Word
 read_docx() %>%
   body_add_par("Meta-analysis leave-one-out table") %>%
-  body_add_flextable(value = ft) %>%
+  body_add_flextable(value = ft3) %>%
   print(target = "meta_analysis_table_old.docx")
