@@ -126,6 +126,8 @@ for (i in 1:8) {
 
   trialmod_rev <- lm(clineff ~ surreff, data = trialdat_rev[-i, ], weights = w)
   loo_preds_rev[i] <- predict(trialmod_rev, newdata = trialdat_rev[i, ])
+  print(exp(predict(trialmod_rev, newdata = trialdat_rev[i, ],
+                interval = "confidence")))
 
 }
 
@@ -191,6 +193,8 @@ for (i in 1:8) {
                          data = trialdat_revlite[-i, ], weights = w)
   loo_preds_revlite[i] <- predict(trialmod_revlite,
                                   newdata = trialdat_revlite[i, ])
+  print(exp(predict(trialmod_revlite, newdata = trialdat_revlite[i, ],
+                    interval = "confidence")))
 
 }
 
@@ -245,6 +249,8 @@ for (i in 1:8) {
                       data = trialdat_comp[-i, ], weights = w)
   loo_preds_comp[i] <- predict(trialmod_comp,
                                   newdata = trialdat_comp[i, ])
+  print(exp(predict(trialmod_comp, newdata = trialdat_comp[i, ],
+                    interval = "confidence")))
 
 }
 
@@ -304,6 +310,8 @@ for (i in 1:8) {
                       data = trialdat_comp2[-i, ], weights = w)
   loo_preds_comp2[i] <- predict(trialmod_comp2,
                                newdata = trialdat_comp2[i, ])
+  print(exp(predict(trialmod_comp2, newdata = trialdat_comp2[i, ],
+                    interval = "confidence")))
 
 }
 
@@ -359,6 +367,8 @@ for (i in 1:8) {
                        data = trialdat_fphr[-i, ], weights = w)
   loo_preds_fphr[i] <- predict(trialmod_fphr,
                                 newdata = trialdat_fphr[i, ])
+  print(exp(predict(trialmod_fphr, newdata = trialdat_fphr[i, ],
+                    interval = "confidence")))
 
 }
 
@@ -479,6 +489,8 @@ for (i in 1:8) {
   
   trialmod_rev <- lm(clineff ~ surreff, data = trialdat_rev[-i, ], weights = w)
   loo_preds_rev[i] <- predict(trialmod_rev, newdata = trialdat_rev[i, ])
+  print(predict(trialmod_rev, newdata = trialdat_rev[i, ],
+                    interval = "confidence"))
   
 }
 
@@ -541,6 +553,8 @@ for (i in 1:8) {
                          data = trialdat_revlite[-i, ], weights = w)
   loo_preds_revlite[i] <- predict(trialmod_revlite,
                                   newdata = trialdat_revlite[i, ])
+  print(predict(trialmod_revlite, newdata = trialdat_revlite[i, ],
+                interval = "confidence"))
   
 }
 
@@ -591,6 +605,8 @@ for (i in 1:8) {
                       data = trialdat_comp[-i, ], weights = w)
   loo_preds_comp[i] <- predict(trialmod_comp,
                                newdata = trialdat_comp[i, ])
+  print(predict(trialmod_comp, newdata = trialdat_comp[i, ],
+                interval = "confidence"))
   
 }
 
@@ -645,6 +661,8 @@ for (i in 1:8) {
                        data = trialdat_comp2[-i, ], weights = w)
   loo_preds_comp2[i] <- predict(trialmod_comp2,
                                 newdata = trialdat_comp2[i, ])
+  print(predict(trialmod_comp2, newdata = trialdat_comp2[i, ],
+                interval = "confidence"))
   
 }
 
@@ -694,6 +712,8 @@ for (i in 1:8) {
                       data = trialdat_fphr[-i, ], weights = w)
   loo_preds_fphr[i] <- predict(trialmod_fphr,
                                newdata = trialdat_fphr[i, ])
+  print(predict(trialmod_fphr, newdata = trialdat_fphr[i, ],
+                interval = "confidence"))
   
 }
 
@@ -813,6 +833,8 @@ for (i in 1:8) {
   
   trialmod_rev <- lm(clineff ~ surreff, data = trialdat_rev[-i, ], weights = w)
   loo_preds_rev[i] <- predict(trialmod_rev, newdata = trialdat_rev[i, ])
+  print(exp(predict(trialmod_rev, newdata = trialdat_rev[i, ],
+                interval = "confidence")))
   
 }
 
@@ -874,6 +896,8 @@ for (i in 1:8) {
                          data = trialdat_revlite[-i, ], weights = w)
   loo_preds_revlite[i] <- predict(trialmod_revlite,
                                   newdata = trialdat_revlite[i, ])
+  print(exp(predict(trialmod_revlite, newdata = trialdat_revlite[i, ],
+                    interval = "confidence")))
   
 }
 
@@ -925,6 +949,8 @@ for (i in 1:8) {
                       data = trialdat_comp[-i, ], weights = w)
   loo_preds_comp[i] <- predict(trialmod_comp,
                                newdata = trialdat_comp[i, ])
+  print(exp(predict(trialmod_comp, newdata = trialdat_comp[i, ],
+                    interval = "confidence")))
   
 }
 
@@ -980,6 +1006,8 @@ for (i in 1:8) {
                        data = trialdat_comp2[-i, ], weights = w)
   loo_preds_comp2[i] <- predict(trialmod_comp2,
                                 newdata = trialdat_comp2[i, ])
+  print(exp(predict(trialmod_comp2, newdata = trialdat_comp2[i, ],
+                    interval = "confidence")))
   
 }
 
@@ -1032,6 +1060,8 @@ for (i in 1:8) {
                       data = trialdat_fphr[-i, ], weights = w)
   loo_preds_fphr[i] <- predict(trialmod_fphr,
                                newdata = trialdat_fphr[i, ])
+  print(exp(predict(trialmod_fphr, newdata = trialdat_fphr[i, ],
+                    interval = "confidence")))
   
 }
 
