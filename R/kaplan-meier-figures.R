@@ -74,16 +74,19 @@ dat$death_day_full2 <- dat$death_day_full - 16*7
 
 # Make figure panels
 # Treatment panels
-p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
-               data = dat) %>% 
+p1 <- survfit2(Surv(cw_day_full2, cw_bin) ~ trt,
+               data = dat[dat$cw_day_full > 16*7, ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "A", x = "Years",
+  labs(title = "A", x = "Weeks",
        y = "Cumulative survival free from clinical worsening") +
   ylim(c(0.25, 1)) +
   annotate("text", x = 1250, y = 0.67, size = 3,
-    label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full,
-                       cw_bin) ~ trt, data = dat))}")) +
+    label = glue::glue("{survfit2_p(survfit2(Surv(cw_day_full2,
+                       cw_bin) ~ trt,
+                       data = dat[dat$cw_day_full > 16*7, ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(breaks = c("Control", "Experimental"),
                       values = c("grey", "black"), name = "Treatment arm") +
   scale_fill_manual(breaks = c("Control", "Experimental"),
@@ -91,7 +94,9 @@ p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
   scale_linetype_manual(values = 1:2,
                         labels = c("Control", "Experimental"),
                         name = "Treatment arm") +
-  scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
@@ -99,16 +104,19 @@ p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
         legend.background = element_rect(fill = "white", color = "black"),
         legend.text = element_text(size = 9))
 
-p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
-               data = dat) %>% 
+p2 <- survfit2(Surv(death_day_full2, death_bin) ~ trt,
+               data = dat[dat$death_day_full > 16*7, ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "B", x = "Years",
+  labs(title = "B", x = "Weeks",
        y = "Cumulative survival") + 
   ylim(c(0.25, 1)) +
   annotate("text", x = 1250, y = 0.75, size = 3,
-           label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full,
-                              death_bin) ~ trt, data = dat))}")) +
+           label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
+                              death_bin) ~ trt,
+                              data = dat[dat$death_day_full > 16*7, ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(breaks = c("Control", "Experimental"),
                       values = c("grey", "black"), name = "Treatment arm") +
   scale_fill_manual(breaks = c("Control", "Experimental"),
@@ -116,7 +124,9 @@ p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
   scale_linetype_manual(values = 1:2,
                         labels = c("Control", "Experimental"),
                         name = "Treatment arm") +
-  scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
@@ -129,7 +139,7 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$compera_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "C", x = "Years",
+  labs(title = "C", x = "Weeks",
        y = "Cumulative survival free from clinical worsening") + 
   ylim(c(0.25, 1)) +
   annotate("text", x = 1250-16*7, y = 0.85, size = 3,
@@ -138,6 +148,8 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
                                          !is.na(dat$compera_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "COMPERA score") +
@@ -147,8 +159,9 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "COMPERA score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
@@ -160,7 +173,7 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$compera_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "D", x = "Years",
+  labs(title = "D", x = "Weeks",
        y = "Cumulative survival") + 
   ylim(c(0.25, 1)) +
   annotate("text", x = 1250-16*7, y = 0.7, size = 3,
@@ -169,6 +182,8 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
                               data = dat[dat$death_day_full > 16*7 &
                                          !is.na(dat$compera_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "COMPERA score") +
@@ -178,8 +193,9 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "COMPERA score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
         axis.title.y = element_text(hjust = 0.5, size = 11),
@@ -187,9 +203,11 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
         legend.background = element_rect(fill = "white", color = "black"),
         legend.text = element_text(size = 9))
 
-# Make figure for paper
+# Make figure for paper (edit dimensions as needed)
 pdf("Output/kaplan-meier-figure.pdf", height = 7.5, width = 6)
-grid.arrange(p1, p2, p3, p4, nrow = 2)
+#grid.arrange(p1, p2, p3, p4, nrow = 2) # doesn't add risk tables
+plot_grid(ggsurvfit_build(p1), ggsurvfit_build(p2),
+          ggsurvfit_build(p3), ggsurvfit_build(p4), ncol = 2)
 dev.off()
 
 
@@ -205,7 +223,7 @@ p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$reveal_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "A", x = "Years",
+  labs(title = "A", x = "Weeks",
        y = "Cumulative survival free from CW") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.85, size = 6/.pt,
@@ -214,6 +232,8 @@ p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
                                          !is.na(dat$reveal_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "REVEAL 2.0 score") +
@@ -223,8 +243,9 @@ p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "REVEAL 2.0 score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 8),
         axis.title.y = element_text(hjust = 0.5, size = 8),
@@ -238,7 +259,7 @@ p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$reveal_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "A", x = "Years",
+  labs(title = "A", x = "Weeks",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
@@ -247,6 +268,8 @@ p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
                               data = dat[dat$death_day_full > 16*7 &
                                          !is.na(dat$reveal_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "REVEAL 2.0 score") +
@@ -256,8 +279,9 @@ p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "REVEAL 2.0 score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 8),
         axis.title.y = element_text(hjust = 0.5, size = 8),
@@ -272,7 +296,7 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$reveal_lite_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "B", x = "Years",
+  labs(title = "B", x = "Weeks",
        y = "Cumulative survival free from CW") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.85, size = 6/.pt,
@@ -281,6 +305,8 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
                                     !is.na(dat$reveal_lite_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "REVEAL Lite 2 score") +
@@ -290,8 +316,9 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "REVEAL Lite 2 score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 8),
         axis.title.y = element_text(hjust = 0.5, size = 8),
@@ -305,10 +332,12 @@ p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
                data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$reveal_lite_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "B", x = "Years",
+  labs(title = "B", x = "Weeks",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   annotate("text", x = 1250-16*7, y = 0.67, size = 6/.pt,
            label = glue::glue("{survfit2_p(survfit2(Surv(death_day_full2,
                               death_bin) ~ reveal_lite_cat16,
@@ -323,8 +352,9 @@ p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "REVEAL Lite 2 score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 8),
         axis.title.y = element_text(hjust = 0.5, size = 8),
@@ -339,7 +369,7 @@ p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
                data = dat[dat$cw_day_full > 16*7 &
                             !is.na(dat$compera2_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "C", x = "Years",
+  labs(title = "C", x = "Weeks",
        y = "Cumulative survival free from CW") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.88, size = 6/.pt,
@@ -348,6 +378,8 @@ p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
                                          !is.na(dat$compera2_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "COMPERA 2.0 score") +
@@ -357,8 +389,9 @@ p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "COMPERA 2.0 score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 8),
         axis.title.y = element_text(hjust = 0.5, size = 8),
@@ -372,7 +405,7 @@ p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
                 data = dat[dat$death_day_full > 16*7 &
                             !is.na(dat$compera2_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "C", x = "Years",
+  labs(title = "C", x = "Weeks",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
@@ -381,6 +414,8 @@ p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
                               data = dat[dat$death_day_full > 16*7 &
                                          !is.na(dat$compera2_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "COMPERA 2.0 score") +
@@ -390,8 +425,9 @@ p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "COMPERA 2.0 score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 8),
         axis.title.y = element_text(hjust = 0.5, size = 8),
@@ -406,7 +442,7 @@ p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
                 data = dat[dat$cw_day_full > 16*7 &
                              !is.na(dat$fphr_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "D", x = "Years",
+  labs(title = "D", x = "Weeks",
        y = "Cumulative survival free from CW") +
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.85, size = 6/.pt,
@@ -415,6 +451,8 @@ p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
                                          !is.na(dat$fphr_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "FPHR score") +
@@ -424,8 +462,9 @@ p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "FPHR score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 8),
         axis.title.y = element_text(hjust = 0.5, size = 8),
@@ -439,7 +478,7 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
                 data = dat[dat$death_day_full > 16*7 &
                              !is.na(dat$fphr_cat16), ]) %>% 
   ggsurvfit(linetype_aes = TRUE) +
-  labs(title = "D", x = "Years",
+  labs(title = "D", x = "Weeks",
        y = "Cumulative survival") + 
   ylim(c(0.2, 1)) +
   annotate("text", x = 1250-16*7, y = 0.7, size = 6/.pt,
@@ -448,6 +487,8 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
                               data = dat[dat$death_day_full > 16*7 &
                                          !is.na(dat$fphr_cat16), ]))}")) +
   add_confidence_interval() +
+  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
                       name = "FPHR score") +
@@ -457,8 +498,9 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
   scale_linetype_manual(values = 2:1,
                         labels = c("Not low risk", "Low risk"),
                         name = "FPHR score") +
-  scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
-                     labels = c("16 weeks", "1", "2", "3", "4")) +
+  scale_x_continuous(breaks = c(0, (52-16)*7, (104-16)*7, (156-16)*7,
+                                (208-16)*7),
+                     labels = c(16, 52, 104, 156, 208)) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
         axis.title.x = element_text(hjust = 0.5, size = 8),
         axis.title.y = element_text(hjust = 0.5, size = 8),
@@ -471,9 +513,13 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
 
 # Make supplement figures
 pdf("Output/kaplan-meier-figure2.pdf", height = 7.5, width = 6)
-grid.arrange(p5, p7, p9, p11, nrow = 2)
+#grid.arrange(p5, p7, p9, p11, nrow = 2)
+plot_grid(ggsurvfit_build(p5), ggsurvfit_build(p7),
+          ggsurvfit_build(p9), ggsurvfit_build(p11), ncol = 2)
 dev.off()
 
 pdf("Output/kaplan-meier-figure3.pdf", height = 7.5, width = 6)
-grid.arrange(p6, p8, p10, p12, nrow = 2)
+#grid.arrange(p6, p8, p10, p12, nrow = 2)
+plot_grid(ggsurvfit_build(p6), ggsurvfit_build(p8),
+          ggsurvfit_build(p10), ggsurvfit_build(p12), ncol = 2)
 dev.off()
