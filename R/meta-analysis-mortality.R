@@ -33,6 +33,12 @@ dat$cw_day_full[dat$cw_day_full == 0] <- 1
 
 dat$cw_bin <- 0
 dat$cw_bin[dat$cw == "CLINICAL WORSENING #1"] <- 1
+
+dat$death_day_full <- dat$death_day
+dat$death_day_full[is.na(dat$death_day_full)] <-
+  dat$esp_day[is.na(dat$death_day_full)]
+dat$death_day_full[dat$death_day_full == 0] <- 1
+
 dat$death_bin <- 0
 dat$death_bin[dat$death == "DEATH"] <- 1
 
@@ -73,7 +79,15 @@ dat$studyregion[dat$studyid == 1013 & dat$country %in% r7list] <-
   "Trial 3: Europe/Australia"
 dat$studyregion[dat$studyid == 1013 & dat$country %in% r8list] <-
   "Trial 3: Asia"
-dat$studyregion <- as.factor(dat$studyregion)
+dat$studyregion <- factor(dat$studyregion,
+                          levels = c("Trial 1: North America",
+                                     "Trial 1: Europe/Australia",
+                                     "Trial 2: Americas",
+                                     "Trial 2: Europe/Australia",
+                                     "Trial 2: Asia",
+                                     "Trial 3: Americas",
+                                     "Trial 3: Europe/Australia",
+                                     "Trial 3: Asia"))
 
 
 ###########################################################################
@@ -86,10 +100,14 @@ coef_rev_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(reveal2_low ~ trt,
-                  data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                  data = dat[dat$studyregion ==
+                               sort(unique(dat$studyregion))[i] &
+                               dat$death_day_full >= 7*16, ],
                   family = "binomial")
-  out_mod <- coxph(Surv(death_day, death_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+  out_mod <- coxph(Surv(death_day_full, death_bin) ~ trt,
+                   data = dat[dat$studyregion == 
+                                sort(unique(dat$studyregion))[i] &
+                                dat$death_day_full >= 7*16, ])
   
   coef_rev_med[[i]] <- summary(med_mod)$coefficients
   coef_rev_out[[i]] <- summary(out_mod)$coefficients
@@ -120,6 +138,8 @@ for (i in 1:8) {
   
   trialmod_rev <- lm(clineff ~ surreff, data = trialdat_rev[-i, ], weights = w)
   loo_preds_rev[i] <- predict(trialmod_rev, newdata = trialdat_rev[i, ])
+  print(exp(predict(trialmod_rev, newdata = trialdat_rev[i, ],
+                    interval = "confidence")))
   
 }
 
@@ -134,10 +154,14 @@ coef_revlite_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(reveal_lite_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion ==
+                              sort(unique(dat$studyregion))[i] &
+                              dat$death_day_full >= 7*16, ],
                  family = "binomial")
-  out_mod <- coxph(Surv(death_day, death_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+  out_mod <- coxph(Surv(death_day_full, death_bin) ~ trt,
+                   data = dat[dat$studyregion ==
+                                sort(unique(dat$studyregion))[i] &
+                                dat$death_day_full >= 7*16, ])
   
   coef_revlite_med[[i]] <- summary(med_mod)$coefficients
   coef_revlite_out[[i]] <- summary(out_mod)$coefficients
@@ -182,6 +206,8 @@ for (i in 1:8) {
                          data = trialdat_revlite[-i, ], weights = w)
   loo_preds_revlite[i] <- predict(trialmod_revlite,
                                   newdata = trialdat_revlite[i, ])
+  print(exp(predict(trialmod_revlite, newdata = trialdat_revlite[i, ],
+                    interval = "confidence")))
   
 }
 
@@ -198,10 +224,14 @@ coef_comp_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(compera_full_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion ==
+                              sort(unique(dat$studyregion))[i] &
+                              dat$death_day_full >= 7*16, ],
                  family = "binomial")
-  out_mod <- coxph(Surv(death_day, death_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+  out_mod <- coxph(Surv(death_day_full, death_bin) ~ trt,
+                   data = dat[dat$studyregion ==
+                                sort(unique(dat$studyregion))[i] &
+                                dat$death_day_full >= 7*16, ])
   
   coef_comp_med[[i]] <- summary(med_mod)$coefficients
   coef_comp_out[[i]] <- summary(out_mod)$coefficients
@@ -234,6 +264,8 @@ for (i in 1:8) {
                       data = trialdat_comp[-i, ], weights = w)
   loo_preds_comp[i] <- predict(trialmod_comp,
                                newdata = trialdat_comp[i, ])
+  print(exp(predict(trialmod_comp, newdata = trialdat_comp[i, ],
+                    interval = "confidence")))
   
 }
 
@@ -251,10 +283,14 @@ coef_comp2_out <- list()
 for (i in 1:8) {
   
   med_mod <- glm(compera_2_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion ==
+                              sort(unique(dat$studyregion))[i] &
+                              dat$death_day_full >= 7*16, ],
                  family = "binomial")
-  out_mod <- coxph(Surv(death_day, death_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+  out_mod <- coxph(Surv(death_day_full, death_bin) ~ trt,
+                   data = dat[dat$studyregion ==
+                                sort(unique(dat$studyregion))[i] &
+                                dat$death_day_full >= 7*16, ])
   
   coef_comp2_med[[i]] <- summary(med_mod)$coefficients
   coef_comp2_out[[i]] <- summary(out_mod)$coefficients
@@ -291,6 +327,8 @@ for (i in 1:8) {
                        data = trialdat_comp2[-i, ], weights = w)
   loo_preds_comp2[i] <- predict(trialmod_comp2,
                                 newdata = trialdat_comp2[i, ])
+  print(exp(predict(trialmod_comp2, newdata = trialdat_comp2[i, ],
+                    interval = "confidence")))
   
 }
 
@@ -309,10 +347,14 @@ coef_fphr_out <- list()
 for (i in c(1, 2, 6, 7, 8)) {
   
   med_mod <- glm(fphr_noninv_low ~ trt,
-                 data = dat[dat$studyregion == unique(dat$studyregion)[i], ],
+                 data = dat[dat$studyregion ==
+                              sort(unique(dat$studyregion))[i] &
+                              dat$death_day_full >= 7*16, ],
                  family = "binomial")
-  out_mod <- coxph(Surv(death_day, death_bin) ~ trt,
-                   data = dat[dat$studyregion == unique(dat$studyregion)[i], ])
+  out_mod <- coxph(Surv(death_day_full, death_bin) ~ trt,
+                   data = dat[dat$studyregion ==
+                                sort(unique(dat$studyregion))[i] &
+                                dat$death_day_full >= 7*16, ])
   
   coef_fphr_med[[i]] <- summary(med_mod)$coefficients
   coef_fphr_out[[i]] <- summary(out_mod)$coefficients
@@ -344,6 +386,8 @@ for (i in 1:8) {
                       data = trialdat_fphr[-i, ], weights = w)
   loo_preds_fphr[i] <- predict(trialmod_fphr,
                                newdata = trialdat_fphr[i, ])
+  print(exp(predict(trialmod_fphr, newdata = trialdat_fphr[i, ],
+                    interval = "confidence")))
   
 }
 
@@ -378,7 +422,7 @@ ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
   facet_wrap(~type, nrow = 2) +
   xlab("Treatment effect on low risk status, log(OR)") +
   ylab("Treatment effect on mortality, log(HR)") +
-  ylim(-2, 0.5) +
+  #ylim(-2, 0.5) +
   geom_smooth(method = 'lm', mapping = aes(weight = w), se = FALSE,
               color = "black", linewidth = 0.5) +
   geom_hline(yintercept = 0, lty = 2) +
