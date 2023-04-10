@@ -85,11 +85,12 @@ p1 <- survfit2(Surv(cw_day_full, cw_bin) ~ trt,
                        cw_bin) ~ trt, data = dat))}")) +
   add_confidence_interval() +
   scale_colour_manual(breaks = c("Control", "Experimental"),
-                      values = c("grey", "black")) +
+                      values = c("grey", "black"), name = "Treatment arm") +
   scale_fill_manual(breaks = c("Control", "Experimental"),
-                    values = c("grey", "black")) +
+                    values = c("grey", "black"), name = "Treatment arm") +
   scale_linetype_manual(values = 1:2,
-                        labels = c("Control", "Experimental")) +
+                        labels = c("Control", "Experimental"),
+                        name = "Treatment arm") +
   scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
@@ -109,11 +110,12 @@ p2 <- survfit2(Surv(death_day_full, death_bin) ~ trt,
                               death_bin) ~ trt, data = dat))}")) +
   add_confidence_interval() +
   scale_colour_manual(breaks = c("Control", "Experimental"),
-                      values = c("grey", "black")) +
+                      values = c("grey", "black"), name = "Treatment arm") +
   scale_fill_manual(breaks = c("Control", "Experimental"),
-                    values = c("grey", "black")) +
+                    values = c("grey", "black"), name = "Treatment arm") +
   scale_linetype_manual(values = 1:2,
-                        labels = c("Control", "Experimental")) +
+                        labels = c("Control", "Experimental"),
+                        name = "Treatment arm") +
   scale_x_continuous(breaks = c(0, 365, 730, 1095, 1460), labels = 0:4) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
         axis.title.x = element_text(hjust = 0.5, size = 11),
@@ -137,11 +139,14 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
                                          !is.na(dat$compera_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "COMPERA score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "COMPERA score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "COMPERA score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
@@ -165,11 +170,14 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
                                          !is.na(dat$compera_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "COMPERA score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "COMPERA score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "COMPERA score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 11),
@@ -207,11 +215,14 @@ p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
                                          !is.na(dat$reveal_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "REVEAL 2.0 score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "REVEAL 2.0 score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "REVEAL 2.0 score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
@@ -219,6 +230,7 @@ p5 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 8),
         legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
+        legend.title = element_text(size = 7),
         legend.text = element_text(size = 6),
         legend.key.size = unit(0.45, "cm"))
 
@@ -236,11 +248,14 @@ p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
                                          !is.na(dat$reveal_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "REVEAL 2.0 score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "REVEAL 2.0 score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "REVEAL 2.0 score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
@@ -248,6 +263,7 @@ p6 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 8),
         legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
+        legend.title = element_text(size = 7),
         legend.text = element_text(size = 6),
         legend.key.size = unit(0.45, "cm"))
 
@@ -266,11 +282,14 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
                                     !is.na(dat$reveal_lite_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "REVEAL Lite 2 score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "REVEAL Lite 2 score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "REVEAL Lite 2 score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
@@ -278,6 +297,7 @@ p7 <- survfit2(Surv(cw_day_full2, cw_bin) ~ reveal_lite_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 8),
         legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
+        legend.title = element_text(size = 7),
         legend.text = element_text(size = 6),
         legend.key.size = unit(0.45, "cm"))
 
@@ -295,11 +315,14 @@ p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
                               data = dat[dat$death_day_full > 16*7 &
                                     !is.na(dat$reveal_lite_cat16), ]))}")) +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "REVEAL Lite 2 score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "REVEAL Lite 2 score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "REVEAL Lite 2 score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
@@ -307,6 +330,7 @@ p8 <- survfit2(Surv(death_day_full2, death_bin) ~ reveal_lite_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 8),
         legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
+        legend.title = element_text(size = 7),
         legend.text = element_text(size = 6),
         legend.key.size = unit(0.45, "cm"))
 
@@ -325,18 +349,22 @@ p9 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera2_cat16,
                                          !is.na(dat$compera2_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "COMPERA 2.0 score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "COMPERA 2.0 score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "COMPERA 2.0 score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
-         axis.title.x = element_text(hjust = 0.5, size = 8),
-         axis.title.y = element_text(hjust = 0.5, size = 8),
-         legend.position = c(0.2, 0.27),
-         legend.background = element_rect(fill = "white", color = "black"),
+        axis.title.x = element_text(hjust = 0.5, size = 8),
+        axis.title.y = element_text(hjust = 0.5, size = 8),
+        legend.position = c(0.2, 0.27),
+        legend.background = element_rect(fill = "white", color = "black"),
+        legend.title = element_text(size = 7),
         legend.text = element_text(size = 6),
         legend.key.size = unit(0.45, "cm"))
 
@@ -354,11 +382,14 @@ p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
                                          !is.na(dat$compera2_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "COMPERA 2.0 score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "COMPERA 2.0 score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "COMPERA 2.0 score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
@@ -366,6 +397,7 @@ p10 <- survfit2(Surv(death_day_full2, death_bin) ~ compera2_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 8),
         legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
+        legend.title = element_text(size = 7),
         legend.text = element_text(size = 6),
         legend.key.size = unit(0.45, "cm"))
 
@@ -384,11 +416,14 @@ p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
                                          !is.na(dat$fphr_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "FPHR score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "FPHR score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "FPHR score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
@@ -396,6 +431,7 @@ p11 <- survfit2(Surv(cw_day_full2, cw_bin) ~ fphr_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 8),
         legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
+        legend.title = element_text(size = 7),
         legend.text = element_text(size = 6),
         legend.key.size = unit(0.45, "cm"))
 
@@ -413,11 +449,14 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
                                          !is.na(dat$fphr_cat16), ]))}")) +
   add_confidence_interval() +
   scale_colour_manual(values = c("grey", "black"),
-                      labels = c("Not low risk", "Low risk")) +
+                      labels = c("Not low risk", "Low risk"),
+                      name = "FPHR score") +
   scale_fill_manual(values = c("grey", "black"),
-                    labels = c("Not low risk", "Low risk")) +
+                    labels = c("Not low risk", "Low risk"),
+                    name = "FPHR score") +
   scale_linetype_manual(values = 2:1,
-                        labels = c("Not low risk", "Low risk")) +
+                        labels = c("Not low risk", "Low risk"),
+                        name = "FPHR score") +
   scale_x_continuous(breaks = c(0, 365-16*7, 730-16*7, 1095-16*7, 1460-16*7),
                      labels = c("16 weeks", "1", "2", "3", "4")) +
   theme(plot.title = element_text(hjust = 0.5, size = 9),
@@ -425,6 +464,7 @@ p12 <- survfit2(Surv(death_day_full2, death_bin) ~ fphr_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 8),
         legend.position = c(0.2, 0.27),
         legend.background = element_rect(fill = "white", color = "black"),
+        legend.title = element_text(size = 7),
         legend.text = element_text(size = 6),
         legend.key.size = unit(0.45, "cm"))
 
