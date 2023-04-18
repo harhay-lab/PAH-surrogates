@@ -86,7 +86,7 @@ p1 <- survfit2(Surv(cw_day_full2, cw_bin) ~ trt,
                        cw_bin) ~ trt,
                        data = dat[dat$cw_day_full > 16*7, ]))}")) +
   add_confidence_interval() +
-  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable(risktable_stats = c("{n.risk} [{cum.censor}]"), size = 2.4) +
   add_risktable_strata_symbol() +
   scale_colour_manual(breaks = c("Control", "Experimental"),
                       values = c("grey", "black"), name = "Treatment arm") +
@@ -103,7 +103,8 @@ p1 <- survfit2(Surv(cw_day_full2, cw_bin) ~ trt,
         axis.title.y = element_text(hjust = 0.5, size = 11),
         legend.position = c(0.25, 0.15),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9))
 
 p2 <- survfit2(Surv(death_day_full2, death_bin) ~ trt,
                data = dat[dat$death_day_full > 16*7, ]) %>% 
@@ -116,7 +117,7 @@ p2 <- survfit2(Surv(death_day_full2, death_bin) ~ trt,
                               death_bin) ~ trt,
                               data = dat[dat$death_day_full > 16*7, ]))}")) +
   add_confidence_interval() +
-  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable(risktable_stats = c("{n.risk} [{cum.censor}]"), size = 2.4) +
   add_risktable_strata_symbol() +
   scale_colour_manual(breaks = c("Control", "Experimental"),
                       values = c("grey", "black"), name = "Treatment arm") +
@@ -133,7 +134,8 @@ p2 <- survfit2(Surv(death_day_full2, death_bin) ~ trt,
         axis.title.y = element_text(hjust = 0.5, size = 11),
         legend.position = c(0.25, 0.15),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9))
 
 # COMPERA panels
 p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
@@ -149,7 +151,7 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
                               data = dat[dat$cw_day_full > 16*7 &
                                          !is.na(dat$compera_cat16), ]))}")) +
   add_confidence_interval() +
-  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable(risktable_stats = c("{n.risk} [{cum.censor}]"), size = 2.4) +
   add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
@@ -168,7 +170,8 @@ p3 <- survfit2(Surv(cw_day_full2, cw_bin) ~ compera_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 11),
         legend.position = c(0.25, 0.15),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9))
 
 p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
                data = dat[dat$death_day_full > 16*7 &
@@ -183,7 +186,7 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
                               data = dat[dat$death_day_full > 16*7 &
                                          !is.na(dat$compera_cat16), ]))}")) +
   add_confidence_interval() +
-  add_risktable(risktable_stats = c("n.risk")) +
+  add_risktable(risktable_stats = c("{n.risk} [{cum.censor}]"), size = 2.4) +
   add_risktable_strata_symbol() +
   scale_colour_manual(values = c("grey", "black"),
                       labels = c("Not low risk", "Low risk"),
@@ -202,7 +205,8 @@ p4 <- survfit2(Surv(death_day_full2, death_bin) ~ compera_cat16,
         axis.title.y = element_text(hjust = 0.5, size = 11),
         legend.position = c(0.25, 0.15),
         legend.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 9))
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9))
 
 # Make figure for paper (edit dimensions as needed)
 pdf("Output/kaplan-meier-figure.pdf", height = 7.5, width = 6)
