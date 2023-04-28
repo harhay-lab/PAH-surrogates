@@ -422,6 +422,7 @@ ggplot(trialdat_full, aes(x = surreff, y = clineff)) +
   xlab("Treatment effect on low risk status, log(OR)") +
   ylab("Treatment effect on clinical worsening, log(HR)") +
   ylim(-1, 0.1) +
+  xlim(-0.25, 0.75) +
   geom_smooth(method = 'lm', mapping = aes(weight = w), se = FALSE,
               color = "black", linewidth = 0.5) +
   geom_hline(yintercept = 0, lty = 2) +
